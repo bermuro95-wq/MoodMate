@@ -2008,6 +2008,212 @@
 
         // Initialize the app when the page loads
         window.addEventListener('DOMContentLoaded', initApp);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+// Real match finding function
+function findMatch() {
+    if (!currentUser) {
+        openAuthModal(true);
+        return;
+    }
+    
+    if (!selectedMood) {
+        alert('Please select a mood first!');
+        return;
+    }
+    
+    // Look for available users with complementary moods
+    db.collection('users')
+        .where('isOnline', '==', true)
+        .where('uid', '!=', currentUser.uid)
+        .where('currentMood', 'in', getComplementaryMoods(selectedMood.name))
+        .limit(1)
+        .get()
+        .then((snapshot) => {
+            if (!snapshot.empty) {
+                const partnerDoc = snapshot.docs[0];
+                currentChatPartner = {
+                    id: partnerDoc.id,
+                    ...partnerDoc.data()
+                };
+                startChatSession();
+            } else {
+                alert('No matches found right now. Try again later!');
+            }
+        })
+        .catch((error) => {
+            console.error("Error finding match:", error);
+            alert('Error finding match. Please try again.');
+        });
+}
+
+function getComplementaryMoods(mood) {
+    // Define mood compatibility logic
+    const moodCompatibility = {
+        'Happy': ['Happy', 'Excited', 'Calm'],
+        'Sad': ['Calm', 'Thoughtful', 'Happy'],
+        'Angry': ['Calm', 'Thoughtful'],
+        'Anxious': ['Calm', 'Thoughtful'],
+        'Excited': ['Happy', 'Excited'],
+        'Calm': ['Calm', 'Thoughtful', 'Happy'],
+        'Thoughtful': ['Thoughtful', 'Calm'],
+        'Tired': ['Calm', 'Thoughtful']
+    };
+    return moodCompatibility[mood] || ['Calm', 'Thoughtful'];
+}
+        
+        
+        
+        
+        
+        
+        
+        
+// Track user online status
+function updateUserStatus(uid, isOnline) {
+    db.collection('users').doc(uid).update({
+        isOnline: isOnline,
+        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+        currentMood: selectedMood ? selectedMood.name : null
+    });
+}
+
+// Call when user logs in
+auth.onAuthStateChanged(user => {
+    if (user) {
+        currentUser = user;
+        updateUserStatus(user.uid, true);
+        // ... rest of your code
+    } else {
+        if (currentUser) {
+            updateUserStatus(currentUser.uid, false);
+        }
+        // ... rest of your code
+    }
+});
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+       // Real Chat Messaging 
+        
+       
+ 
+        
+function startChatSession() {
+    // Create a chat session in Firestore
+    const chatId = db.collection('chats').doc().id;
+    
+    db.collection('chats').doc(chatId).set({
+        participants: [currentUser.uid, currentChatPartner.id],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        mood: selectedMood.name,
+        isActive: true
+    }).then(() => {
+        currentChatId = chatId;
+        setupChatListener(chatId);
+        // Show chat UI
+        chatContainer.style.display = 'block';
+        chatPartnerName.textContent = currentChatPartner.displayName;
+        connectionInfo.textContent = `Connected through: ${selectedMood.name} & ${currentChatPartner.currentMood}`;
+    });
+}
+
+function setupChatListener(chatId) {
+    db.collection('chats').doc(chatId).collection('messages')
+        .orderBy('timestamp', 'asc')
+        .onSnapshot((snapshot) => {
+            chatMessages.innerHTML = '';
+            snapshot.forEach((doc) => {
+                const message = doc.data();
+                addMessageToChat(
+                    message.senderId === currentUser.uid ? 'self' : 'partner',
+                    message.text
+                );
+            });
+        });
+}
+
+function sendMessage() {
+    const message = messageInput.value.trim();
+    if (message === '' || !currentChatId) return;
+    
+    db.collection('chats').doc(currentChatId).collection('messages').add({
+        text: message,
+        senderId: currentUser.uid,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        messageInput.value = '';
+    });
+}
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     </script>
 </body>
 </html>
