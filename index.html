@@ -2394,6 +2394,419 @@ function endChat() {
 
     // Initialize the app when the page loads
     window.addEventListener('DOMContentLoaded', initApp);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+// ==================== 24-HOUR MOOD SYSTEM FIX ====================
+
+// Replace the entire findMatch function with this:
+function findMatch() {
+    if (!currentUser) {
+        openAuthModal(true);
+        return;
+    }
+    
+    if (!selectedMood) {
+        alert('Please select a mood first!');
+        return;
+    }
+    
+    // Show loading state
+    const originalText = connectFindMatchBtn.textContent;
+    connectFindMatchBtn.textContent = 'Finding your MoodMate...';
+    connectFindMatchBtn.disabled = true;
+    
+    // Set mood expiry to 24 hours from now
+    const now = new Date();
+    const expiryTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    
+    // Update user's mood with 24-hour expiry
+    db.collection('users').doc(currentUser.uid).update({
+        currentMood: selectedMood.name,
+        moodSetAt: firebase.firestore.FieldValue.serverTimestamp(),
+        moodExpiresAt: expiryTime,
+        isOnline: true,
+        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        console.log('Mood set for 24 hours');
+        
+        // SIMPLE MATCHING: Get all online users and filter
+        db.collection('users')
+            .where('isOnline', '==', true)
+            .get()
+            .then((snapshot) => {
+                connectFindMatchBtn.textContent = originalText;
+                connectFindMatchBtn.disabled = false;
+                
+                const potentialMatches = [];
+                const now = new Date();
+                
+                snapshot.forEach(doc => {
+                    const userData = doc.data();
+                    
+                    // Skip current user
+                    if (userData.uid === currentUser.uid) return;
+                    
+                    // Check if user has same mood AND mood hasn't expired
+                    if (userData.currentMood === selectedMood.name) {
+                        // Check if mood is still valid (within 24 hours)
+                        if (userData.moodExpiresAt) {
+                            const expiryDate = userData.moodExpiresAt.toDate();
+                            if (expiryDate > now) {
+                                potentialMatches.push({
+                                    id: doc.id,
+                                    ...userData
+                                });
+                            }
+                        } else {
+                            // If no expiry time, assume it's valid
+                            potentialMatches.push({
+                                id: doc.id,
+                                ...userData
+                            });
+                        }
+                    }
+                });
+                
+                showMatchResult(potentialMatches);
+            })
+            .catch((error) => {
+                console.error("Error finding matches:", error);
+                connectFindMatchBtn.textContent = originalText;
+                connectFindMatchBtn.disabled = false;
+                alert('No users available right now. Please try again later.');
+            });
+    }).catch((error) => {
+        console.error("Error setting mood:", error);
+        connectFindMatchBtn.textContent = originalText;
+        connectFindMatchBtn.disabled = false;
+        alert('Error setting your mood. Please try again.');
+    });
+}
+
+// Add this cleanup function to remove expired moods
+function cleanupExpiredMoods() {
+    const now = new Date();
+    
+    db.collection('users').get().then((snapshot) => {
+        snapshot.forEach(doc => {
+            const userData = doc.data();
+            if (userData.moodExpiresAt) {
+                const expiryDate = userData.moodExpiresAt.toDate();
+                if (expiryDate <= now) {
+                    // Mood expired, clear it
+                    db.collection('users').doc(doc.id).update({
+                        currentMood: null,
+                        moodExpiresAt: null
+                    });
+                }
+            }
+        });
+    });
+}
+
+// Run cleanup every hour
+setInterval(cleanupExpiredMoods, 60 * 60 * 1000);
+
+// Also run cleanup on page load
+window.addEventListener('load', cleanupExpiredMoods);
+
+// Update user profile initialization to include mood fields
+function initializeUserProfileWithMood(user) {
+    db.collection('users').doc(user.uid).set({
+        uid: user.uid,
+        displayName: user.displayName || 'User',
+        email: user.email,
+        isOnline: true,
+        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        kindnessPoints: 0,
+        connections: 0,
+        activeDays: 1,
+        currentMood: null, // No mood initially
+        moodExpiresAt: null // No expiry initially
+    }, { merge: true }).then(() => {
+        console.log('User profile initialized with mood system');
+        loadUserProfile(user.uid);
+        updateUIForUser(user);
+        showPage('home');
+    }).catch(error => {
+        console.error("Error initializing user profile:", error);
+        loadUserProfile(user.uid);
+        updateUIForUser(user);
+        showPage('home');
+    });
+}
+
+// Replace the old initializeUserProfile
+initializeUserProfile = initializeUserProfileWithMood;
+
+console.log('24-Hour Mood System Activated!');
+
+// ==================== MOOD STATUS DISPLAY ====================
+
+// Add this to show current mood status
+function showMoodStatus() {
+    if (!currentUser) return;
+    
+    db.collection('users').doc(currentUser.uid).get()
+        .then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                const now = new Date();
+                
+                if (userData.currentMood && userData.moodExpiresAt) {
+                    const expiryDate = userData.moodExpiresAt.toDate();
+                    const timeLeft = expiryDate - now;
+                    
+                    if (timeLeft > 0) {
+                        const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+                        const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        
+                        // Show mood status in connect section
+                        const statusElement = document.getElementById('moodStatus') || createMoodStatusElement();
+                        statusElement.innerHTML = `
+                            <div style="background: var(--gradient); color: white; padding: 15px; border-radius: 15px; text-align: center; margin: 20px 0;">
+                                <strong>Your Current Mood: ${userData.currentMood}</strong>
+                                <br>
+                                <small>Active for ${hoursLeft}h ${minutesLeft}m more</small>
+                            </div>
+                        `;
+                    } else {
+                        // Mood expired, clear it
+                        db.collection('users').doc(currentUser.uid).update({
+                            currentMood: null,
+                            moodExpiresAt: null
+                        });
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error checking mood status:", error);
+        });
+}
+
+function createMoodStatusElement() {
+    const statusElement = document.createElement('div');
+    statusElement.id = 'moodStatus';
+    const connectSection = document.querySelector('#connect .mood-selection');
+    connectSection.appendChild(statusElement);
+    return statusElement;
+}
+
+// Update mood status every minute
+setInterval(showMoodStatus, 60000);
+
+// Show mood status when connect page is opened
+document.addEventListener('DOMContentLoaded', function() {
+    // Override showPage to include mood status
+    const originalShowPage = showPage;
+    window.showPage = function(page) {
+        originalShowPage(page);
+        if (page === 'connect' && currentUser) {
+            setTimeout(showMoodStatus, 1000);
+        }
+    };
+});
+
+// ==================== ENHANCED USER FEEDBACK ====================
+
+// Replace the alert in findMatch with this better feedback
+function showMatchResult(potentialMatches) {
+    if (potentialMatches.length > 0) {
+        const randomIndex = Math.floor(Math.random() * potentialMatches.length);
+        currentChatPartner = potentialMatches[randomIndex];
+        
+        // Show success message with partner info
+        const matchMessage = `🎉 Found a match!\nName: ${currentChatPartner.displayName}\nMood: ${currentChatPartner.currentMood}\n\nStarting chat now...`;
+        alert(matchMessage);
+        startRealChatSession();
+    } else {
+        // Show encouraging message with 24-hour info
+        const noMatchMessage = `No one else is feeling ${selectedMood.name} right now.\n\n🌟 GOOD NEWS: Your ${selectedMood.name} mood will stay active for 24 hours!\n\nOther users can find and connect with you during this time.\nTry again in a little while!`;
+        alert(noMatchMessage);
+        
+        // Show mood status after alert
+        setTimeout(showMoodStatus, 100);
+    }
+}
+
+// ==================== CONNECTION COUNTER ====================
+
+// Show how many people are online with each mood
+function showMoodStatistics() {
+    if (!currentUser) return;
+    
+    db.collection('users')
+        .where('isOnline', '==', true)
+        .get()
+        .then((snapshot) => {
+            const moodCounts = {};
+            const now = new Date();
+            
+            snapshot.forEach(doc => {
+                const userData = doc.data();
+                if (userData.currentMood && userData.uid !== currentUser.uid) {
+                    // Check if mood hasn't expired
+                    if (!userData.moodExpiresAt || userData.moodExpiresAt.toDate() > now) {
+                        moodCounts[userData.currentMood] = (moodCounts[userData.currentMood] || 0) + 1;
+                    }
+                }
+            });
+            
+            // Update mood cards with counts
+            updateMoodCardsWithCounts(moodCounts);
+        })
+        .catch(error => {
+            console.error("Error getting mood statistics:", error);
+        });
+}
+
+function updateMoodCardsWithCounts(moodCounts) {
+    const moodCards = document.querySelectorAll('.mood-card');
+    moodCards.forEach(card => {
+        const moodName = card.querySelector('.mood-name').textContent;
+        const count = moodCounts[moodName] || 0;
+        
+        // Remove existing count badge
+        const existingBadge = card.querySelector('.user-count-badge');
+        if (existingBadge) {
+            existingBadge.remove();
+        }
+        
+        if (count > 0) {
+            // Add count badge
+            const badge = document.createElement('div');
+            badge.className = 'user-count-badge';
+            badge.innerHTML = `${count} online`;
+            badge.style.cssText = 'position: absolute; top: 10px; right: 10px; background: var(--success); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold;';
+            card.style.position = 'relative';
+            card.appendChild(badge);
+        }
+    });
+}
+
+// Update statistics when connect page is opened
+document.addEventListener('DOMContentLoaded', function() {
+    let statsInterval;
+    
+    // Override showPage to include statistics
+    const originalShowPage = showPage;
+    window.showPage = function(page) {
+        originalShowPage(page);
+        
+        // Clear existing interval
+        if (statsInterval) {
+            clearInterval(statsInterval);
+        }
+        
+        if (page === 'connect' && currentUser) {
+            setTimeout(showMoodStatistics, 1500);
+            // Update every 30 seconds when on connect page
+            statsInterval = setInterval(showMoodStatistics, 30000);
+        }
+    };
+});
+
+// ==================== FIX NAVIGATION ====================
+
+// Fix the navigation issue
+function setupNavigation() {
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = link.getAttribute('data-page');
+            
+            // About page is always accessible
+            if (page === 'about') {
+                showPage('about');
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                return;
+            }
+            
+            // Other pages require login
+            if (!currentUser) {
+                openAuthModal(true);
+                return;
+            }
+            
+            showPage(page);
+            
+            // Update active nav link
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+}
+
+// ==================== FINAL INITIALIZATION ====================
+
+// Override the initApp to include our new features
+const originalInitApp = initApp;
+initApp = function() {
+    originalInitApp();
+    
+    // Additional initialization for mood system
+    setTimeout(() => {
+        if (currentUser) {
+            showMoodStatus();
+            showMoodStatistics();
+        }
+    }, 2000);
+    
+    console.log('Enhanced 24-Hour Mood System Fully Activated!');
+};
+
+// Initialize the app when the page loads
+window.addEventListener('DOMContentLoaded', initApp);
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 </script>
     
     
