@@ -123,20 +123,11 @@
             box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
         }
 
-        
-
-
-
-.btn-outline:hover {
-    background: #673ab7;
-    color: white;
-}
-
-
-
-
-  
-        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
 
         .btn-outline:hover {
             background: white;
@@ -1351,34 +1342,15 @@
 
     <script>
         // Firebase Configuration 
-        
-        
-        
-        
-        
-const firebaseConfig = {
-
-  apiKey: "AIzaSyArKVCDSqgQO65s7YAifLeU5xgPOWxmue8",
-
-  authDomain: "moodmate-faf26.firebaseapp.com",
-
-  projectId: "moodmate-faf26",
-
-  storageBucket: "moodmate-faf26.firebasestorage.app",
-
-  messagingSenderId: "39348859057",
-
-  appId: "1:39348859057:web:c4be7b9212beb108613290",
-
-  measurementId: "G-MJV8S14RB9"
-
-};
-
-        
-        
-        
-        
-        
+        const firebaseConfig = {
+            apiKey: "AIzaSyArKVCDSqgQO65s7YAifLeU5xgPOWxmue8",
+            authDomain: "moodmate-faf26.firebaseapp.com",
+            projectId: "moodmate-faf26",
+            storageBucket: "moodmate-faf26.firebasestorage.app",
+            messagingSenderId: "39348859057",
+            appId: "1:39348859057:web:c4be7b9212beb108613290",
+            measurementId: "G-MJV8S14RB9"
+        };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -1441,6 +1413,7 @@ const firebaseConfig = {
         let currentChatPartner = null;
         let userProfile = null;
         let previousPage = 'home';
+        let currentChatId = null;
 
         // Mood Data
         const moods = [
@@ -1464,13 +1437,33 @@ const firebaseConfig = {
             auth.onAuthStateChanged(user => {
                 if (user) {
                     currentUser = user;
-                    updateUIForUser(user);
-                    loadUserProfile(user.uid);
-                    showPage('home');
+                    
+                    // Initialize user document with required fields
+                    db.collection('users').doc(user.uid).set({
+                        uid: user.uid,
+                        displayName: user.displayName || 'User',
+                        email: user.email,
+                        isOnline: true,
+                        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        kindnessPoints: 0,
+                        connections: 0,
+                        activeDays: 1
+                    }, { merge: true }).then(() => {
+                        loadUserProfile(user.uid);
+                        updateUIForUser(user);
+                        showPage('home');
+                    });
+                    
                 } else {
+                    if (currentUser) {
+                        // Update user as offline when logging out
+                        db.collection('users').doc(currentUser.uid).update({
+                            isOnline: false
+                        });
+                    }
                     currentUser = null;
                     updateUIForGuest();
-                    // Show only the auth modal if no user is logged in
                     showPage('home');
                 }
             });
@@ -1751,7 +1744,8 @@ const firebaseConfig = {
                             kindnessPoints: 0,
                             connections: 0,
                             activeDays: 1,
-                            lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                            isOnline: true
                         });
                     })
                     .then(() => {
@@ -1782,7 +1776,8 @@ const firebaseConfig = {
                             kindnessPoints: 0,
                             connections: 0,
                             activeDays: 1,
-                            lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                            isOnline: true
                         });
                     }
                 })
@@ -1813,7 +1808,8 @@ const firebaseConfig = {
                             kindnessPoints: 0,
                             connections: 0,
                             activeDays: 1,
-                            lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                            isOnline: true
                         });
                     }
                 })
@@ -1901,7 +1897,7 @@ const firebaseConfig = {
             }
         }
 
-        // Find a match based on selected mood
+        // Fixed match finding function
         function findMatch() {
             if (!currentUser) {
                 openAuthModal(true);
@@ -1913,34 +1909,145 @@ const firebaseConfig = {
                 return;
             }
             
-            // In a real app, this would query Firestore for users with complementary moods
-            // For demo purposes, we'll simulate finding a match
-            const potentialPartners = [
-                { name: "Alex", mood: "Calm" },
-                { name: "Sam", mood: "Thoughtful" },
-                { name: "Jordan", mood: "Happy" }
-            ];
+            // Get today's date in YYYY-MM-DD format for matching
+            const today = new Date().toISOString().split('T')[0];
             
-            const partner = potentialPartners[Math.floor(Math.random() * potentialPartners.length)];
-            currentChatPartner = partner;
+            console.log(`Looking for match: ${selectedMood.name} on ${today}`);
             
-            // Show chat interface
-            chatContainer.style.display = 'block';
-            chatPartnerName.textContent = partner.name;
-            connectionInfo.textContent = `Connected through: ${selectedMood.name} & ${partner.mood}`;
+            // First, update current user's mood for today
+            db.collection('users').doc(currentUser.uid).update({
+                currentMood: selectedMood.name,
+                lastMoodUpdate: firebase.firestore.FieldValue.serverTimestamp(),
+                moodDate: today,
+                isOnline: true
+            }).then(() => {
+                // Look for other users with the SAME mood on the SAME day
+                // Exclude current user and look for someone available
+                db.collection('users')
+                    .where('moodDate', '==', today)
+                    .where('currentMood', '==', selectedMood.name)
+                    .where('uid', '!=', currentUser.uid)
+                    .where('isOnline', '==', true)
+                    .limit(5) // Get a few potential matches
+                    .get()
+                    .then((snapshot) => {
+                        if (!snapshot.empty) {
+                            // Filter to find the best match (most recent or random)
+                            const potentialMatches = [];
+                            snapshot.forEach(doc => {
+                                potentialMatches.push({
+                                    id: doc.id,
+                                    ...doc.data()
+                                });
+                            });
+                            
+                            // Select a random match from available users
+                            const randomIndex = Math.floor(Math.random() * potentialMatches.length);
+                            currentChatPartner = potentialMatches[randomIndex];
+                            
+                            console.log('Match found:', currentChatPartner);
+                            startChatSession();
+                        } else {
+                            // No matches found with same mood today
+                            alert(`No one else is feeling ${selectedMood.name} today. Try again later or select a different mood!`);
+                            
+                            // Optional: Show waiting message and retry logic
+                            showNoMatchMessage();
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error finding match:", error);
+                        alert('Error finding match. Please try again.');
+                    });
+            }).catch((error) => {
+                console.error("Error updating user mood:", error);
+                alert('Error updating your mood. Please try again.');
+            });
+        }
+
+        // Function to handle no matches found
+        function showNoMatchMessage() {
+            const retryBtn = document.createElement('button');
+            retryBtn.textContent = 'Retry in 30 seconds';
+            retryBtn.className = 'btn btn-primary';
+            retryBtn.style.marginTop = '10px';
             
-            // Clear previous messages
-            chatMessages.innerHTML = '';
+            retryBtn.onclick = function() {
+                setTimeout(findMatch, 30000); // Retry after 30 seconds
+                this.disabled = true;
+                this.textContent = 'Searching...';
+            };
             
-            // Add welcome message
-            addMessageToChat('system', `You've been connected with ${partner.name} who is feeling ${partner.mood.toLowerCase()}!`);
-            addMessageToChat('partner', `Hi there! I see we're matched through our moods. How's your day going?`);
+            // You can display this in a more user-friendly way
+            alert(`No matches found right now. Click "OK" then the retry button to search again.`);
+        }
+
+        // Enhanced chat session start
+        function startChatSession() {
+            if (!currentChatPartner) {
+                alert('No chat partner selected');
+                return;
+            }
             
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Create a unique chat ID based on both user IDs
+            const chatId = [currentUser.uid, currentChatPartner.id].sort().join('_');
             
-            // Scroll to chat
-            chatContainer.scrollIntoView({ behavior: 'smooth' });
+            db.collection('chats').doc(chatId).set({
+                participants: [currentUser.uid, currentChatPartner.id],
+                participantNames: [currentUser.displayName || 'You', currentChatPartner.displayName || 'Anonymous'],
+                participantMoods: [selectedMood.name, currentChatPartner.currentMood],
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                mood: selectedMood.name,
+                isActive: true,
+                lastActivity: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).then(() => {
+                currentChatId = chatId;
+                setupChatListener(chatId);
+                
+                // Show chat UI
+                chatContainer.style.display = 'block';
+                chatPartnerName.textContent = currentChatPartner.displayName || 'MoodMate';
+                connectionInfo.textContent = `Both feeling: ${selectedMood.name} • Connected today`;
+                
+                // Clear previous messages
+                chatMessages.innerHTML = '';
+                
+                // Add welcome message
+                addMessageToChat('system', `You've been connected with ${currentChatPartner.displayName || 'a MoodMate'}! You're both feeling ${selectedMood.name.toLowerCase()} today.`);
+                addMessageToChat('system', `This is a safe space to share how you're feeling. Start the conversation!`);
+                
+                // Scroll to chat
+                chatContainer.scrollIntoView({ behavior: 'smooth' });
+                
+                console.log('Chat session started:', chatId);
+            }).catch((error) => {
+                console.error("Error starting chat:", error);
+                alert('Error starting chat. Please try again.');
+            });
+        }
+
+        // Enhanced chat listener
+        function setupChatListener(chatId) {
+            // Clear any existing listener
+            if (window.chatListener) {
+                window.chatListener();
+            }
+            
+            window.chatListener = db.collection('chats').doc(chatId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot((snapshot) => {
+                    chatMessages.innerHTML = '';
+                    snapshot.forEach((doc) => {
+                        const message = doc.data();
+                        const isSelf = message.senderId === currentUser.uid;
+                        addMessageToChat(isSelf ? 'self' : 'partner', message.text);
+                    });
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, (error) => {
+                    console.error("Chat listener error:", error);
+                });
         }
 
         // Add a message to the chat
@@ -1962,7 +2069,7 @@ const firebaseConfig = {
             } else {
                 messageElement.className = 'message';
                 messageElement.innerHTML = `
-                    <div class="message-avatar">${currentChatPartner.name.charAt(0).toUpperCase()}</div>
+                    <div class="message-avatar">${currentChatPartner.displayName ? currentChatPartner.displayName.charAt(0).toUpperCase() : 'P'}</div>
                     <div class="message-content">${message}</div>
                 `;
             }
@@ -1971,53 +2078,65 @@ const firebaseConfig = {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Send a message
+        // Enhanced send message function
         function sendMessage() {
             const message = messageInput.value.trim();
-            if (message === '') return;
+            if (message === '' || !currentChatId) return;
             
-            // Add message to chat
-            addMessageToChat('self', message);
-            
-            // Clear input
-            messageInput.value = '';
-            
-            // Simulate response after a delay
-            setTimeout(() => {
-                const responses = [
-                    "That's interesting! Tell me more about that.",
-                    "I can relate to how you're feeling.",
-                    "Thanks for sharing that with me.",
-                    "I appreciate your perspective on this.",
-                    "That sounds challenging. How are you handling it?",
-                    "I'm glad you shared that with me."
-                ];
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            // Add message to Firestore
+            db.collection('chats').doc(currentChatId).collection('messages').add({
+                text: message,
+                senderId: currentUser.uid,
+                senderName: currentUser.displayName || 'Anonymous',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                messageInput.value = '';
                 
-                addMessageToChat('partner', randomResponse);
-            }, 1000 + Math.random() * 2000);
+                // Update last activity
+                db.collection('chats').doc(currentChatId).update({
+                    lastActivity: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }).catch((error) => {
+                console.error("Error sending message:", error);
+                alert('Error sending message. Please try again.');
+            });
         }
 
-        // End the current chat
+        // Enhanced end chat function
         function endChat() {
             if (confirm('Are you sure you want to end this chat?')) {
+                if (currentChatId) {
+                    // Update chat as inactive
+                    db.collection('chats').doc(currentChatId).update({
+                        isActive: false,
+                        endedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Remove chat listener
+                    if (window.chatListener) {
+                        window.chatListener();
+                        window.chatListener = null;
+                    }
+                }
+                
                 chatContainer.style.display = 'none';
+                currentChatId = null;
+                currentChatPartner = null;
                 
-                // Show mood summary
-                alert("You made someone's day! Thanks for connecting.");
-                
-                // Update user stats (in a real app, this would update Firestore)
+                // Update user stats
                 if (userProfile) {
                     userProfile.connections = (userProfile.connections || 0) + 1;
                     userProfile.kindnessPoints = (userProfile.kindnessPoints || 0) + 5;
                     updateProfileUI(userProfile);
                     
-                    // In a real app, we would update Firestore here
-                    // db.collection('users').doc(currentUser.uid).update({
-                    //     connections: userProfile.connections,
-                    //     kindnessPoints: userProfile.kindnessPoints
-                    // });
+                    // Update in Firestore
+                    db.collection('users').doc(currentUser.uid).update({
+                        connections: firebase.firestore.FieldValue.increment(1),
+                        kindnessPoints: firebase.firestore.FieldValue.increment(5)
+                    });
                 }
+                
+                alert("Thanks for connecting with someone who understands how you feel! 💜");
             }
         }
 
@@ -2028,212 +2147,6 @@ const firebaseConfig = {
 
         // Initialize the app when the page loads
         window.addEventListener('DOMContentLoaded', initApp);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-// Real match finding function
-function findMatch() {
-    if (!currentUser) {
-        openAuthModal(true);
-        return;
-    }
-    
-    if (!selectedMood) {
-        alert('Please select a mood first!');
-        return;
-    }
-    
-    // Look for available users with complementary moods
-    db.collection('users')
-        .where('isOnline', '==', true)
-        .where('uid', '!=', currentUser.uid)
-        .where('currentMood', 'in', getComplementaryMoods(selectedMood.name))
-        .limit(1)
-        .get()
-        .then((snapshot) => {
-            if (!snapshot.empty) {
-                const partnerDoc = snapshot.docs[0];
-                currentChatPartner = {
-                    id: partnerDoc.id,
-                    ...partnerDoc.data()
-                };
-                startChatSession();
-            } else {
-                alert('No matches found right now. Try again later!');
-            }
-        })
-        .catch((error) => {
-            console.error("Error finding match:", error);
-            alert('Error finding match. Please try again.');
-        });
-}
-
-function getComplementaryMoods(mood) {
-    // Define mood compatibility logic
-    const moodCompatibility = {
-        'Happy': ['Happy', 'Excited', 'Calm'],
-        'Sad': ['Calm', 'Thoughtful', 'Happy'],
-        'Angry': ['Calm', 'Thoughtful'],
-        'Anxious': ['Calm', 'Thoughtful'],
-        'Excited': ['Happy', 'Excited'],
-        'Calm': ['Calm', 'Thoughtful', 'Happy'],
-        'Thoughtful': ['Thoughtful', 'Calm'],
-        'Tired': ['Calm', 'Thoughtful']
-    };
-    return moodCompatibility[mood] || ['Calm', 'Thoughtful'];
-}
-        
-        
-        
-        
-        
-        
-        
-        
-// Track user online status
-function updateUserStatus(uid, isOnline) {
-    db.collection('users').doc(uid).update({
-        isOnline: isOnline,
-        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-        currentMood: selectedMood ? selectedMood.name : null
-    });
-}
-
-// Call when user logs in
-auth.onAuthStateChanged(user => {
-    if (user) {
-        currentUser = user;
-        updateUserStatus(user.uid, true);
-        // ... rest of your code
-    } else {
-        if (currentUser) {
-            updateUserStatus(currentUser.uid, false);
-        }
-        // ... rest of your code
-    }
-});
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-       // Real Chat Messaging 
-        
-       
- 
-        
-function startChatSession() {
-    // Create a chat session in Firestore
-    const chatId = db.collection('chats').doc().id;
-    
-    db.collection('chats').doc(chatId).set({
-        participants: [currentUser.uid, currentChatPartner.id],
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        mood: selectedMood.name,
-        isActive: true
-    }).then(() => {
-        currentChatId = chatId;
-        setupChatListener(chatId);
-        // Show chat UI
-        chatContainer.style.display = 'block';
-        chatPartnerName.textContent = currentChatPartner.displayName;
-        connectionInfo.textContent = `Connected through: ${selectedMood.name} & ${currentChatPartner.currentMood}`;
-    });
-}
-
-function setupChatListener(chatId) {
-    db.collection('chats').doc(chatId).collection('messages')
-        .orderBy('timestamp', 'asc')
-        .onSnapshot((snapshot) => {
-            chatMessages.innerHTML = '';
-            snapshot.forEach((doc) => {
-                const message = doc.data();
-                addMessageToChat(
-                    message.senderId === currentUser.uid ? 'self' : 'partner',
-                    message.text
-                );
-            });
-        });
-}
-
-function sendMessage() {
-    const message = messageInput.value.trim();
-    if (message === '' || !currentChatId) return;
-    
-    db.collection('chats').doc(currentChatId).collection('messages').add({
-        text: message,
-        senderId: currentUser.uid,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        messageInput.value = '';
-    });
-}
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     </script>
 </body>
 </html>
