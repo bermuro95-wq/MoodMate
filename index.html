@@ -1453,6 +1453,12 @@
                         loadUserProfile(user.uid);
                         updateUIForUser(user);
                         showPage('home');
+                    }).catch(error => {
+                        console.error("Error initializing user:", error);
+                        // Still continue even if initialization fails
+                        loadUserProfile(user.uid);
+                        updateUIForUser(user);
+                        showPage('home');
                     });
                     
                 } else {
@@ -1460,6 +1466,8 @@
                         // Update user as offline when logging out
                         db.collection('users').doc(currentUser.uid).update({
                             isOnline: false
+                        }).catch(error => {
+                            console.error("Error updating offline status:", error);
                         });
                     }
                     currentUser = null;
@@ -1897,7 +1905,7 @@
             }
         }
 
-        // Fixed match finding function
+        // Fixed match finding function with better error handling
         function findMatch() {
             if (!currentUser) {
                 openAuthModal(true);
@@ -1914,72 +1922,88 @@
             
             console.log(`Looking for match: ${selectedMood.name} on ${today}`);
             
-            // First, update current user's mood for today
-            db.collection('users').doc(currentUser.uid).update({
+            // Show loading state
+            const originalText = connectFindMatchBtn.textContent;
+            connectFindMatchBtn.textContent = 'Searching...';
+            connectFindMatchBtn.disabled = true;
+            
+            // First, ensure user document exists with all required fields
+            db.collection('users').doc(currentUser.uid).set({
+                uid: currentUser.uid,
+                displayName: currentUser.displayName || 'User',
+                email: currentUser.email,
                 currentMood: selectedMood.name,
-                lastMoodUpdate: firebase.firestore.FieldValue.serverTimestamp(),
                 moodDate: today,
-                isOnline: true
-            }).then(() => {
+                isOnline: true,
+                lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMoodUpdate: firebase.firestore.FieldValue.serverTimestamp(),
+                kindnessPoints: 0,
+                connections: 0,
+                activeDays: 1
+            }, { merge: true }).then(() => {
+                console.log('User mood updated successfully');
+                
                 // Look for other users with the SAME mood on the SAME day
-                // Exclude current user and look for someone available
+                // Use simpler query that's more likely to work
                 db.collection('users')
                     .where('moodDate', '==', today)
                     .where('currentMood', '==', selectedMood.name)
-                    .where('uid', '!=', currentUser.uid)
                     .where('isOnline', '==', true)
-                    .limit(5) // Get a few potential matches
+                    .limit(5)
                     .get()
                     .then((snapshot) => {
+                        connectFindMatchBtn.textContent = originalText;
+                        connectFindMatchBtn.disabled = false;
+                        
                         if (!snapshot.empty) {
-                            // Filter to find the best match (most recent or random)
+                            // Filter out current user and find available matches
                             const potentialMatches = [];
                             snapshot.forEach(doc => {
-                                potentialMatches.push({
-                                    id: doc.id,
-                                    ...doc.data()
-                                });
+                                const userData = doc.data();
+                                if (userData.uid !== currentUser.uid) {
+                                    potentialMatches.push({
+                                        id: doc.id,
+                                        ...userData
+                                    });
+                                }
                             });
                             
-                            // Select a random match from available users
-                            const randomIndex = Math.floor(Math.random() * potentialMatches.length);
-                            currentChatPartner = potentialMatches[randomIndex];
-                            
-                            console.log('Match found:', currentChatPartner);
-                            startChatSession();
+                            if (potentialMatches.length > 0) {
+                                // Select a random match from available users
+                                const randomIndex = Math.floor(Math.random() * potentialMatches.length);
+                                currentChatPartner = potentialMatches[randomIndex];
+                                
+                                console.log('Match found:', currentChatPartner);
+                                startChatSession();
+                            } else {
+                                // No matches found with same mood today (only current user found)
+                                alert(`No one else is feeling ${selectedMood.name} today. Try again later or select a different mood!`);
+                            }
                         } else {
-                            // No matches found with same mood today
+                            // No matches found at all
                             alert(`No one else is feeling ${selectedMood.name} today. Try again later or select a different mood!`);
-                            
-                            // Optional: Show waiting message and retry logic
-                            showNoMatchMessage();
                         }
                     })
                     .catch((error) => {
                         console.error("Error finding match:", error);
-                        alert('Error finding match. Please try again.');
+                        connectFindMatchBtn.textContent = originalText;
+                        connectFindMatchBtn.disabled = false;
+                        
+                        // More specific error message
+                        if (error.code === 'failed-precondition') {
+                            alert('Matching system is being set up. Please try again in a moment.');
+                        } else if (error.code === 'permission-denied') {
+                            alert('Please make sure you are logged in correctly.');
+                        } else {
+                            alert('No matches available right now. Please try again later.');
+                        }
                     });
             }).catch((error) => {
                 console.error("Error updating user mood:", error);
+                connectFindMatchBtn.textContent = originalText;
+                connectFindMatchBtn.disabled = false;
                 alert('Error updating your mood. Please try again.');
             });
-        }
-
-        // Function to handle no matches found
-        function showNoMatchMessage() {
-            const retryBtn = document.createElement('button');
-            retryBtn.textContent = 'Retry in 30 seconds';
-            retryBtn.className = 'btn btn-primary';
-            retryBtn.style.marginTop = '10px';
-            
-            retryBtn.onclick = function() {
-                setTimeout(findMatch, 30000); // Retry after 30 seconds
-                this.disabled = true;
-                this.textContent = 'Searching...';
-            };
-            
-            // You can display this in a more user-friendly way
-            alert(`No matches found right now. Click "OK" then the retry button to search again.`);
         }
 
         // Enhanced chat session start
