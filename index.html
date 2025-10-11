@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoodMate – Connect by Feelings</title>
+    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* ===== CSS VARIABLES ===== */
         :root {
             --primary: #8a2be2;
             --secondary: #ff69b4;
@@ -26,6 +30,7 @@
             --glow: 0 0 15px rgba(138, 43, 226, 0.5);
         }
 
+        /* ===== BASE STYLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -46,7 +51,7 @@
             padding: 0 20px;
         }
 
-        /* Header & Navigation */
+        /* ===== HEADER & NAVIGATION ===== */
         header {
             background: var(--gradient);
             color: white;
@@ -134,7 +139,7 @@
             color: var(--primary);
         }
 
-        /* Hero Section */
+        /* ===== HERO SECTION ===== */
         .hero {
             padding: 80px 0;
             text-align: center;
@@ -165,7 +170,7 @@
             margin-top: 30px;
         }
 
-        /* Mood Selection */
+        /* ===== MOOD SELECTION ===== */
         .mood-selection {
             padding: 60px 0;
             background: white;
@@ -221,7 +226,7 @@
             color: var(--dark);
         }
 
-        /* Chat Interface */
+        /* ===== CHAT INTERFACE ===== */
         .chat-container {
             display: none;
             max-width: 800px;
@@ -319,7 +324,7 @@
             transform: scale(1.05);
         }
 
-        /* Dashboard */
+        /* ===== DASHBOARD ===== */
         .dashboard {
             padding: 40px 0;
         }
@@ -373,7 +378,7 @@
             font-weight: bold;
         }
 
-        /* Profile */
+        /* ===== PROFILE ===== */
         .profile {
             padding: 40px 0;
         }
@@ -428,7 +433,7 @@
             color: #777;
         }
 
-        /* About Section */
+        /* ===== ABOUT SECTION ===== */
         .about-section {
             padding: 60px 0;
             background: white;
@@ -478,7 +483,7 @@
             color: white;
         }
 
-        /* Footer */
+        /* ===== FOOTER ===== */
         footer {
             background: var(--dark);
             color: white;
@@ -524,7 +529,7 @@
             font-size: 0.9rem;
         }
 
-        /* Authentication Modal */
+        /* ===== AUTHENTICATION MODAL ===== */
         .modal {
             display: none;
             position: fixed;
@@ -640,7 +645,7 @@
             display: none;
         }
 
-        /* Social Login Buttons */
+        /* ===== SOCIAL LOGIN BUTTONS ===== */
         .social-btn {
             background: white;
             border: 2px solid #e0e0e0;
@@ -672,7 +677,7 @@
             color: #4267B2;
         }
 
-        /* Page Sections */
+        /* ===== PAGE SECTIONS ===== */
         .page-section {
             display: none;
         }
@@ -681,7 +686,7 @@
             display: block;
         }
 
-        /* Login Face */
+        /* ===== LOGIN FACE ===== */
         .login-face {
             display: flex;
             align-items: center;
@@ -697,7 +702,7 @@
             object-fit: cover;
         }
 
-        /* How It Works Modal */
+        /* ===== HOW IT WORKS MODAL ===== */
         .how-it-works-modal {
             display: none;
             position: fixed;
@@ -814,7 +819,7 @@
             font-size: 1.05rem;
         }
 
-        /* MoodMate Images */
+        /* ===== MOODMATE IMAGES ===== */
         .moodmate-images {
             display: flex;
             justify-content: center;
@@ -836,7 +841,7 @@
             transform: scale(1.05);
         }
 
-        /* FIX: How It Works Button Visibility */
+        /* ===== HOW IT WORKS BUTTON FIX ===== */
         #howItWorksBtn {
             transition: all 0.3s ease;
             outline: none;
@@ -856,7 +861,36 @@
             color: var(--primary);
         }
 
-        /* Responsive Design */
+        /* ===== MOOD STATUS DISPLAY ===== */
+        #moodStatus {
+            margin-bottom: 20px;
+        }
+
+        /* ===== ONLINE USERS COUNTER ===== */
+        #totalOnlineCounter {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ===== QUICK MOOD SELECTOR ===== */
+        #quickMoodSelector {
+            margin: 20px 0;
+        }
+
+        /* ===== ENHANCED NOTIFICATIONS ===== */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -984,7 +1018,7 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- ===== HEADER ===== -->
     <header>
         <div class="container">
             <div class="header-content">
@@ -1008,7 +1042,7 @@
         </div>
     </header>
 
-    <!-- Home Section -->
+    <!-- ===== HOME SECTION ===== -->
     <section class="page-section active" id="home">
         <!-- Hero Section -->
         <section class="hero">
@@ -1031,7 +1065,7 @@
         </section>
     </section>
 
-    <!-- Connect Section -->
+    <!-- ===== CONNECT SECTION ===== -->
     <section class="page-section" id="connect">
         <div class="mood-selection container">
             <h2 class="section-title">Connect with Others</h2>
@@ -1065,7 +1099,7 @@
         </div>
     </section>
 
-    <!-- Profile Section -->
+    <!-- ===== PROFILE SECTION ===== -->
     <section class="page-section" id="profile">
         <div class="profile container">
             <h2 class="section-title">Your Profile</h2>
@@ -1109,7 +1143,7 @@
         </div>
     </section>
 
-    <!-- About Section (includes Contact) -->
+    <!-- ===== ABOUT SECTION ===== -->
     <section class="page-section" id="about">
         <div class="about-section container">
             <h2 class="section-title">About MoodMate</h2>
@@ -1177,7 +1211,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ===== FOOTER ===== -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -1216,7 +1250,7 @@
         </div>
     </footer>
 
-    <!-- Authentication Modal -->
+    <!-- ===== AUTHENTICATION MODAL ===== -->
     <div class="modal" id="authModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1275,7 +1309,7 @@
         </div>
     </div>
 
-    <!-- How It Works Modal -->
+    <!-- ===== HOW IT WORKS MODAL ===== -->
     <div class="how-it-works-modal" id="howItWorksModal">
         <div class="how-it-works-content">
             <button class="close-how-it-works" id="closeHowItWorks">&times;</button>
@@ -1339,1305 +1373,1132 @@
         </div>
     </div>
 
-<script>
-    // Firebase Configuration 
-    const firebaseConfig = {
-        apiKey: "AIzaSyArKVCDSqgQO65s7YAifLeU5xgPOWxmue8",
-        authDomain: "moodmate-faf26.firebaseapp.com",
-        projectId: "moodmate-faf26",
-        storageBucket: "moodmate-faf26.firebasestorage.app",
-        messagingSenderId: "39348859057",
-        appId: "1:39348859057:web:c4be7b9212beb108613290",
-        measurementId: "G-MJV8S14RB9"
-    };
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ===== FIREBASE CONFIGURATION =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyArKVCDSqgQO65s7YAifLeU5xgPOWxmue8",
+            authDomain: "moodmate-faf26.firebaseapp.com",
+            projectId: "moodmate-faf26",
+            storageBucket: "moodmate-faf26.firebasestorage.app",
+            messagingSenderId: "39348859057",
+            appId: "1:39348859057:web:c4be7b9212beb108613290",
+            measurementId: "G-MJV8S14RB9"
+        };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
 
-    // Initialize Firebase Auth providers
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
-    const facebookProvider = new firebase.auth.FacebookAuthProvider();
+        // Initialize Firebase Auth providers
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
-    // DOM Elements
-    const loginBtn = document.getElementById('loginBtn');
-    const signupBtn = document.getElementById('signupBtn');
-    const getStartedBtn = document.getElementById('getStartedBtn');
-    const howItWorksBtn = document.getElementById('howItWorksBtn');
-    const authModal = document.getElementById('authModal');
-    const closeModal = document.getElementById('closeModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const switchAuthMode = document.getElementById('switchAuthMode');
-    const authSwitchText = document.getElementById('authSwitchText');
-    const authActionBtn = document.getElementById('authActionBtn');
-    const signupFields = document.getElementById('signupFields');
-    const authError = document.getElementById('authError');
-    const authSuccess = document.getElementById('authSuccess');
-    const googleSignIn = document.getElementById('googleSignIn');
-    const facebookSignIn = document.getElementById('facebookSignIn');
-    const connectFindMatchBtn = document.getElementById('connectFindMatchBtn');
-    const chatContainer = document.getElementById('chatContainer');
-    const endChatBtn = document.getElementById('endChatBtn');
-    const sendMessageBtn = document.getElementById('sendMessageBtn');
-    const messageInput = document.getElementById('messageInput');
-    const chatMessages = document.getElementById('chatMessages');
-    const chatPartnerName = document.getElementById('chatPartnerName');
-    const connectionInfo = document.getElementById('connectionInfo');
-    const connectMoodGrid = document.getElementById('connectMoodGrid');
-    const profileName = document.getElementById('profileName');
-    const profileBio = document.getElementById('profileBio');
-    const profileAvatar = document.getElementById('profileAvatar');
-    const connectionsCount = document.getElementById('connectionsCount');
-    const pointsCount = document.getElementById('pointsCount');
-    const activeDays = document.getElementById('activeDays');
-    const recentMoods = document.getElementById('recentMoods');
-    const editProfileBtn = document.getElementById('editProfileBtn');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const togglePassword = document.getElementById('togglePassword');
-    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-    const confirmPasswordContainer = document.getElementById('confirmPasswordContainer');
-    const confirmPassword = document.getElementById('confirmPassword');
-    const loginFace = document.getElementById('loginFace');
-    const userPhoto = document.getElementById('userPhoto');
-    const userName = document.getElementById('userName');
-    const howItWorksModal = document.getElementById('howItWorksModal');
-    const closeHowItWorks = document.getElementById('closeHowItWorks');
+        // ===== DOM ELEMENTS =====
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        const howItWorksBtn = document.getElementById('howItWorksBtn');
+        const authModal = document.getElementById('authModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const switchAuthMode = document.getElementById('switchAuthMode');
+        const authSwitchText = document.getElementById('authSwitchText');
+        const authActionBtn = document.getElementById('authActionBtn');
+        const signupFields = document.getElementById('signupFields');
+        const authError = document.getElementById('authError');
+        const authSuccess = document.getElementById('authSuccess');
+        const googleSignIn = document.getElementById('googleSignIn');
+        const facebookSignIn = document.getElementById('facebookSignIn');
+        const connectFindMatchBtn = document.getElementById('connectFindMatchBtn');
+        const chatContainer = document.getElementById('chatContainer');
+        const endChatBtn = document.getElementById('endChatBtn');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const messageInput = document.getElementById('messageInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatPartnerName = document.getElementById('chatPartnerName');
+        const connectionInfo = document.getElementById('connectionInfo');
+        const connectMoodGrid = document.getElementById('connectMoodGrid');
+        const profileName = document.getElementById('profileName');
+        const profileBio = document.getElementById('profileBio');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const connectionsCount = document.getElementById('connectionsCount');
+        const pointsCount = document.getElementById('pointsCount');
+        const activeDays = document.getElementById('activeDays');
+        const recentMoods = document.getElementById('recentMoods');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPasswordContainer = document.getElementById('confirmPasswordContainer');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const loginFace = document.getElementById('loginFace');
+        const userPhoto = document.getElementById('userPhoto');
+        const userName = document.getElementById('userName');
+        const howItWorksModal = document.getElementById('howItWorksModal');
+        const closeHowItWorks = document.getElementById('closeHowItWorks');
 
-    // App State
-    let currentUser = null;
-    let selectedMood = null;
-    let isLoginMode = false;
-    let currentChatPartner = null;
-    let userProfile = null;
-    let previousPage = 'home';
-    let currentChatId = null;
+        // ===== APP STATE =====
+        let currentUser = null;
+        let selectedMood = null;
+        let isLoginMode = false;
+        let currentChatPartner = null;
+        let userProfile = null;
+        let previousPage = 'home';
+        let currentChatId = null;
 
-    // Mood Data
-    const moods = [
-        { emoji: "😊", name: "Happy", color: "#FFD700" },
-        { emoji: "😔", name: "Sad", color: "#6495ED" },
-        { emoji: "😴", name: "Tired", color: "#708090" },
-        { emoji: "😡", name: "Angry", color: "#FF4500" },
-        { emoji: "😌", name: "Calm", color: "#98FB98" },
-        { emoji: "🤔", name: "Thoughtful", color: "#DDA0DD" },
-        { emoji: "😰", name: "Anxious", color: "#FFA07A" },
-        { emoji: "🎉", name: "Excited", color: "#FF69B4" }
-    ];
+        // ===== MOOD DATA =====
+        const moods = [
+            { emoji: "😊", name: "Happy", color: "#FFD700" },
+            { emoji: "😔", name: "Sad", color: "#6495ED" },
+            { emoji: "😴", name: "Tired", color: "#708090" },
+            { emoji: "😡", name: "Angry", color: "#FF4500" },
+            { emoji: "😌", name: "Calm", color: "#98FB98" },
+            { emoji: "🤔", name: "Thoughtful", color: "#DDA0DD" },
+            { emoji: "😰", name: "Anxious", color: "#FFA07A" },
+            { emoji: "🎉", name: "Excited", color: "#FF69B4" }
+        ];
 
-    // Initialize the app
-    function initApp() {
-        populateConnectMoodGrid();
-        setupEventListeners();
-        setupNavigation();
-        
-        // Check auth state
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                console.log('User logged in:', user.uid);
-                initializeUserProfile(user);
-            } else {
-                console.log('No user logged in');
-                if (currentUser) {
-                    updateUserOfflineStatus();
+        // ===== INITIALIZE THE APP =====
+        function initApp() {
+            populateConnectMoodGrid();
+            setupEventListeners();
+            setupNavigation();
+            
+            // Check auth state
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    currentUser = user;
+                    console.log('User logged in:', user.uid);
+                    initializeUserProfile(user);
+                } else {
+                    console.log('No user logged in');
+                    if (currentUser) {
+                        updateUserOfflineStatus();
+                    }
+                    currentUser = null;
+                    updateUIForGuest();
+                    showPage('home');
                 }
-                currentUser = null;
-                updateUIForGuest();
-                showPage('home');
-            }
-        });
-    }
-
-    // Initialize user profile with error handling
-    function initializeUserProfile(user) {
-        db.collection('users').doc(user.uid).set({
-            uid: user.uid,
-            displayName: user.displayName || 'User',
-            email: user.email,
-            isOnline: true,
-            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            kindnessPoints: 0,
-            connections: 0,
-            activeDays: 1,
-            currentMood: null,
-            moodExpiresAt: null
-        }, { merge: true }).then(() => {
-            console.log('User profile initialized successfully');
-            loadUserProfile(user.uid);
-            updateUIForUser(user);
-            showPage('home');
-        }).catch(error => {
-            console.error("Error initializing user profile:", error);
-            loadUserProfile(user.uid);
-            updateUIForUser(user);
-            showPage('home');
-        });
-    }
-
-    // Update user offline status
-    function updateUserOfflineStatus() {
-        if (currentUser) {
-            db.collection('users').doc(currentUser.uid).update({
-                isOnline: false
-            }).catch(error => {
-                console.error("Error updating offline status:", error);
             });
         }
-    }
 
-    // Setup navigation
-    function setupNavigation() {
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = link.getAttribute('data-page');
-                
-                // About page is always accessible
-                if (page === 'about') {
-                    showPage('about');
+        // ===== USER PROFILE MANAGEMENT =====
+        function initializeUserProfile(user) {
+            db.collection('users').doc(user.uid).set({
+                uid: user.uid,
+                displayName: user.displayName || 'User',
+                email: user.email,
+                isOnline: true,
+                lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                kindnessPoints: 0,
+                connections: 0,
+                activeDays: 1,
+                currentMood: null,
+                moodExpiresAt: null
+            }, { merge: true }).then(() => {
+                console.log('User profile initialized successfully');
+                loadUserProfile(user.uid);
+                updateUIForUser(user);
+                showPage('home');
+            }).catch(error => {
+                console.error("Error initializing user profile:", error);
+                loadUserProfile(user.uid);
+                updateUIForUser(user);
+                showPage('home');
+            });
+        }
+
+        function updateUserOfflineStatus() {
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).update({
+                    isOnline: false
+                }).catch(error => {
+                    console.error("Error updating offline status:", error);
+                });
+            }
+        }
+
+        function loadUserProfile(uid) {
+            db.collection('users').doc(uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        userProfile = doc.data();
+                        updateProfileUI(userProfile);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error loading user profile:", error);
+                });
+        }
+
+        function updateProfileUI(profile) {
+            profileName.textContent = profile.displayName || 'User';
+            profileBio.textContent = `${profile.gender || ''} • ${profile.country || ''}`;
+            connectionsCount.textContent = profile.connections || 0;
+            pointsCount.textContent = profile.kindnessPoints || 0;
+            activeDays.textContent = profile.activeDays || 1;
+            
+            // Set avatar initial or photo
+            if (profile.photoURL) {
+                profileAvatar.innerHTML = `<img src="${profile.photoURL}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                const initial = profile.displayName ? profile.displayName.charAt(0).toUpperCase() : 'U';
+                profileAvatar.innerHTML = initial;
+            }
+        }
+
+        // ===== NAVIGATION =====
+        function setupNavigation() {
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = link.getAttribute('data-page');
+                    
+                    // About page is always accessible
+                    if (page === 'about') {
+                        showPage('about');
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        return;
+                    }
+                    
+                    // Other pages require login
+                    if (!currentUser) {
+                        openAuthModal(true);
+                        return;
+                    }
+                    
+                    showPage(page);
+                    
+                    // Update active nav link
                     navLinks.forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
-                    return;
-                }
-                
-                // Other pages require login
-                if (!currentUser) {
-                    openAuthModal(true);
-                    return;
-                }
-                
-                showPage(page);
-                
-                // Update active nav link
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+                });
             });
-        });
-    }
-
-    // Show specific page
-    function showPage(page) {
-        document.querySelectorAll('.page-section').forEach(section => {
-            section.classList.remove('active');
-        });
-        
-        // About page is always accessible
-        if (page === 'about') {
-            document.getElementById(page).classList.add('active');
-            return;
         }
-        
-        if (currentUser) {
-            document.getElementById(page).classList.add('active');
-        } else {
-            // If not logged in, only show home page
-            document.getElementById('home').classList.add('active');
-        }
-    }
 
-    // Populate connect mood selection grid only
-    function populateConnectMoodGrid() {
-        connectMoodGrid.innerHTML = '';
-        
-        moods.forEach(mood => {
-            const connectMoodCard = document.createElement('div');
-            connectMoodCard.className = 'mood-card';
-            connectMoodCard.innerHTML = `
-                <div class="mood-emoji">${mood.emoji}</div>
-                <div class="mood-name">${mood.name}</div>
-            `;
-            connectMoodCard.addEventListener('click', () => selectMood(mood, connectMoodCard));
-            connectMoodGrid.appendChild(connectMoodCard);
-        });
-    }
-
-    // Select a mood
-    function selectMood(mood, card) {
-        if (!currentUser) {
-            openAuthModal(true);
-            return;
-        }
-        
-        document.querySelectorAll('.mood-card').forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        selectedMood = mood;
-    }
-
-    // Setup event listeners
-    function setupEventListeners() {
-        // Authentication
-        loginBtn.addEventListener('click', () => openAuthModal(true));
-        signupBtn.addEventListener('click', () => openAuthModal(false));
-        getStartedBtn.addEventListener('click', () => openAuthModal(false));
-        howItWorksBtn.addEventListener('click', function() {
-            this.classList.add('active');
-            setTimeout(() => {
-                this.classList.remove('active');
-            }, 300);
-            openHowItWorksModal();
-        });
-        closeModal.addEventListener('click', closeAuthModal);
-        switchAuthMode.addEventListener('click', toggleAuthMode);
-        authActionBtn.addEventListener('click', handleAuthAction);
-        googleSignIn.addEventListener('click', signInWithGoogle);
-        facebookSignIn.addEventListener('click', signInWithFacebook);
-        
-        // How It Works Modal
-        closeHowItWorks.addEventListener('click', closeHowItWorksModal);
-        
-        // Close modal when clicking outside
-        howItWorksModal.addEventListener('click', (e) => {
-            if (e.target === howItWorksModal) {
-                closeHowItWorksModal();
-            }
-        });
-        
-        // Password visibility toggle
-        togglePassword.addEventListener('click', togglePasswordVisibility);
-        toggleConfirmPassword.addEventListener('click', toggleConfirmPasswordVisibility);
-        
-        // Chat
-        connectFindMatchBtn.addEventListener('click', findMatch);
-        endChatBtn.addEventListener('click', endChat);
-        sendMessageBtn.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-        
-        // Profile
-        editProfileBtn.addEventListener('click', openEditProfileModal);
-    }
-
-    // Open How It Works Modal
-    function openHowItWorksModal() {
-        howItWorksModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    // Close How It Works Modal
-    function closeHowItWorksModal() {
-        howItWorksModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    // Toggle password visibility
-    function togglePasswordVisibility() {
-        const passwordInput = document.getElementById('password');
-        const icon = togglePassword.querySelector('i');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-
-    // Toggle confirm password visibility
-    function toggleConfirmPasswordVisibility() {
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const icon = toggleConfirmPassword.querySelector('i');
-        
-        if (confirmPasswordInput.type === 'password') {
-            confirmPasswordInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            confirmPasswordInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-
-    // Authentication functions
-    function openAuthModal(isLogin) {
-        isLoginMode = isLogin;
-        modalTitle.textContent = isLogin ? 'Log In' : 'Sign Up';
-        authActionBtn.textContent = isLogin ? 'Log In' : 'Create Account';
-        authSwitchText.textContent = isLogin ? "Don't have an account?" : "Already have an account?";
-        switchAuthMode.textContent = isLogin ? 'Sign Up' : 'Log In';
-        signupFields.style.display = isLogin ? 'none' : 'block';
-        confirmPasswordContainer.style.display = isLogin ? 'none' : 'block';
-        authError.style.display = 'none';
-        authSuccess.style.display = 'none';
-        
-        // Hide login face by default
-        loginFace.style.display = 'none';
-        
-        authModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeAuthModal() {
-        authModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        // Clear form fields
-        document.getElementById('fullName').value = '';
-        document.getElementById('gender').value = '';
-        document.getElementById('country').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('confirmPassword').value = '';
-    }
-
-    function toggleAuthMode(e) {
-        e.preventDefault();
-        openAuthModal(!isLoginMode);
-    }
-
-    function handleAuthAction() {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        if (!email || !password) {
-            showAuthError('Please fill in all fields');
-            return;
-        }
-        
-        if (!isLoginMode) {
-            // Sign up validation
-            const fullName = document.getElementById('fullName').value;
-            const gender = document.getElementById('gender').value;
-            const country = document.getElementById('country').value;
-            const confirmPasswordValue = document.getElementById('confirmPassword').value;
+        function showPage(page) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
             
-            if (!fullName || !gender || !country) {
+            // About page is always accessible
+            if (page === 'about') {
+                document.getElementById(page).classList.add('active');
+                return;
+            }
+            
+            if (currentUser) {
+                document.getElementById(page).classList.add('active');
+            } else {
+                // If not logged in, only show home page
+                document.getElementById('home').classList.add('active');
+            }
+            
+            // Update mood status when connect page opens
+            if (page === 'connect' && currentUser) {
+                setTimeout(showMoodStatus, 500);
+                setTimeout(showOnlineUsers, 1000);
+                setTimeout(addQuickMoodSelector, 1500);
+            }
+        }
+
+        // ===== MOOD SELECTION =====
+        function populateConnectMoodGrid() {
+            connectMoodGrid.innerHTML = '';
+            
+            moods.forEach(mood => {
+                const connectMoodCard = document.createElement('div');
+                connectMoodCard.className = 'mood-card';
+                connectMoodCard.innerHTML = `
+                    <div class="mood-emoji">${mood.emoji}</div>
+                    <div class="mood-name">${mood.name}</div>
+                `;
+                connectMoodCard.addEventListener('click', () => selectMood(mood, connectMoodCard));
+                connectMoodGrid.appendChild(connectMoodCard);
+            });
+        }
+
+        function selectMood(mood, card) {
+            if (!currentUser) {
+                openAuthModal(true);
+                return;
+            }
+            
+            document.querySelectorAll('.mood-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedMood = mood;
+            saveToRecentMoods(mood.name);
+        }
+
+        // ===== EVENT LISTENERS =====
+        function setupEventListeners() {
+            // Authentication
+            loginBtn.addEventListener('click', () => openAuthModal(true));
+            signupBtn.addEventListener('click', () => openAuthModal(false));
+            getStartedBtn.addEventListener('click', () => openAuthModal(false));
+            howItWorksBtn.addEventListener('click', function() {
+                this.classList.add('active');
+                setTimeout(() => {
+                    this.classList.remove('active');
+                }, 300);
+                openHowItWorksModal();
+            });
+            closeModal.addEventListener('click', closeAuthModal);
+            switchAuthMode.addEventListener('click', toggleAuthMode);
+            authActionBtn.addEventListener('click', handleAuthAction);
+            googleSignIn.addEventListener('click', signInWithGoogle);
+            facebookSignIn.addEventListener('click', signInWithFacebook);
+            
+            // How It Works Modal
+            closeHowItWorks.addEventListener('click', closeHowItWorksModal);
+            
+            // Close modal when clicking outside
+            howItWorksModal.addEventListener('click', (e) => {
+                if (e.target === howItWorksModal) {
+                    closeHowItWorksModal();
+                }
+            });
+            
+            // Password visibility toggle
+            togglePassword.addEventListener('click', togglePasswordVisibility);
+            toggleConfirmPassword.addEventListener('click', toggleConfirmPasswordVisibility);
+            
+            // Chat
+            connectFindMatchBtn.addEventListener('click', findMatch);
+            endChatBtn.addEventListener('click', endChat);
+            sendMessageBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+            
+            // Profile
+            editProfileBtn.addEventListener('click', openEditProfileModal);
+        }
+
+        // ===== MODAL FUNCTIONS =====
+        function openHowItWorksModal() {
+            howItWorksModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeHowItWorksModal() {
+            howItWorksModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const icon = togglePassword.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function toggleConfirmPasswordVisibility() {
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const icon = toggleConfirmPassword.querySelector('i');
+            
+            if (confirmPasswordInput.type === 'password') {
+                confirmPasswordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                confirmPasswordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // ===== AUTHENTICATION FUNCTIONS =====
+        function openAuthModal(isLogin) {
+            isLoginMode = isLogin;
+            modalTitle.textContent = isLogin ? 'Log In' : 'Sign Up';
+            authActionBtn.textContent = isLogin ? 'Log In' : 'Create Account';
+            authSwitchText.textContent = isLogin ? "Don't have an account?" : "Already have an account?";
+            switchAuthMode.textContent = isLogin ? 'Sign Up' : 'Log In';
+            signupFields.style.display = isLogin ? 'none' : 'block';
+            confirmPasswordContainer.style.display = isLogin ? 'none' : 'block';
+            authError.style.display = 'none';
+            authSuccess.style.display = 'none';
+            
+            // Hide login face by default
+            loginFace.style.display = 'none';
+            
+            authModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAuthModal() {
+            authModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // Clear form fields
+            document.getElementById('fullName').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('country').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        function toggleAuthMode(e) {
+            e.preventDefault();
+            openAuthModal(!isLoginMode);
+        }
+
+        function handleAuthAction() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
                 showAuthError('Please fill in all fields');
                 return;
             }
             
-            if (password !== confirmPasswordValue) {
-                showAuthError('Passwords do not match');
-                return;
+            if (!isLoginMode) {
+                // Sign up validation
+                const fullName = document.getElementById('fullName').value;
+                const gender = document.getElementById('gender').value;
+                const country = document.getElementById('country').value;
+                const confirmPasswordValue = document.getElementById('confirmPassword').value;
+                
+                if (!fullName || !gender || !country) {
+                    showAuthError('Please fill in all fields');
+                    return;
+                }
+                
+                if (password !== confirmPasswordValue) {
+                    showAuthError('Passwords do not match');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showAuthError('Password should be at least 6 characters');
+                    return;
+                }
             }
             
-            if (password.length < 6) {
-                showAuthError('Password should be at least 6 characters');
-                return;
+            if (isLoginMode) {
+                // Login
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        showAuthSuccess('Login successful!');
+                        setTimeout(closeAuthModal, 1000);
+                    })
+                    .catch((error) => {
+                        showAuthError(error.message);
+                    });
+            } else {
+                // Sign up
+                const fullName = document.getElementById('fullName').value;
+                const gender = document.getElementById('gender').value;
+                const country = document.getElementById('country').value;
+                
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        // Create user profile in Firestore
+                        return db.collection('users').doc(user.uid).set({
+                            uid: user.uid,
+                            displayName: fullName,
+                            email: email,
+                            gender: gender,
+                            country: country,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            kindnessPoints: 0,
+                            connections: 0,
+                            activeDays: 1,
+                            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                            isOnline: true
+                        });
+                    })
+                    .then(() => {
+                        showAuthSuccess('Account created successfully!');
+                        setTimeout(closeAuthModal, 1000);
+                    })
+                    .catch((error) => {
+                        showAuthError(error.message);
+                    });
             }
         }
-        
-        if (isLoginMode) {
-            // Login
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    showAuthSuccess('Login successful!');
-                    setTimeout(closeAuthModal, 1000);
-                })
-                .catch((error) => {
-                    showAuthError(error.message);
-                });
-        } else {
-            // Sign up
-            const fullName = document.getElementById('fullName').value;
-            const gender = document.getElementById('gender').value;
-            const country = document.getElementById('country').value;
-            
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    // Create user profile in Firestore
-                    return db.collection('users').doc(user.uid).set({
-                        uid: user.uid,
-                        displayName: fullName,
-                        email: email,
-                        gender: gender,
-                        country: country,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        kindnessPoints: 0,
-                        connections: 0,
-                        activeDays: 1,
-                        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-                        isOnline: true
-                    });
+
+        function signInWithGoogle() {
+            auth.signInWithPopup(googleProvider)
+                .then((result) => {
+                    // Check if user is new
+                    const user = result.user;
+                    const isNewUser = result.additionalUserInfo.isNewUser;
+                    
+                    if (isNewUser) {
+                        // Create user profile for new Google user
+                        return db.collection('users').doc(user.uid).set({
+                            uid: user.uid,
+                            displayName: user.displayName,
+                            email: user.email,
+                            photoURL: user.photoURL,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            kindnessPoints: 0,
+                            connections: 0,
+                            activeDays: 1,
+                            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                            isOnline: true
+                        });
+                    }
                 })
                 .then(() => {
-                    showAuthSuccess('Account created successfully!');
+                    showAuthSuccess('Signed in with Google successfully!');
                     setTimeout(closeAuthModal, 1000);
                 })
                 .catch((error) => {
                     showAuthError(error.message);
                 });
         }
-    }
 
-    function signInWithGoogle() {
-        auth.signInWithPopup(googleProvider)
-            .then((result) => {
-                // Check if user is new
-                const user = result.user;
-                const isNewUser = result.additionalUserInfo.isNewUser;
-                
-                if (isNewUser) {
-                    // Create user profile for new Google user
-                    return db.collection('users').doc(user.uid).set({
-                        uid: user.uid,
-                        displayName: user.displayName,
-                        email: user.email,
-                        photoURL: user.photoURL,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        kindnessPoints: 0,
-                        connections: 0,
-                        activeDays: 1,
-                        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-                        isOnline: true
-                    });
-                }
-            })
-            .then(() => {
-                showAuthSuccess('Signed in with Google successfully!');
-                setTimeout(closeAuthModal, 1000);
-            })
-            .catch((error) => {
-                showAuthError(error.message);
-            });
-    }
-
-    function signInWithFacebook() {
-        auth.signInWithPopup(facebookProvider)
-            .then((result) => {
-                // Check if user is new
-                const user = result.user;
-                const isNewUser = result.additionalUserInfo.isNewUser;
-                
-                if (isNewUser) {
-                    // Create user profile for new Facebook user
-                    return db.collection('users').doc(user.uid).set({
-                        uid: user.uid,
-                        displayName: user.displayName,
-                        email: user.email,
-                        photoURL: user.photoURL,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        kindnessPoints: 0,
-                        connections: 0,
-                        activeDays: 1,
-                        lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-                        isOnline: true
-                    });
-                }
-            })
-            .then(() => {
-                showAuthSuccess('Signed in with Facebook successfully!');
-                setTimeout(closeAuthModal, 1000);
-            })
-            .catch((error) => {
-                showAuthError(error.message);
-            });
-    }
-
-    function showAuthError(message) {
-        authError.textContent = message;
-        authError.style.display = 'block';
-        authSuccess.style.display = 'none';
-    }
-
-    function showAuthSuccess(message) {
-        authSuccess.textContent = message;
-        authSuccess.style.display = 'block';
-        authError.style.display = 'none';
-    }
-
-    // Update UI based on auth state
-    function updateUIForUser(user) {
-        loginBtn.textContent = 'Profile';
-        signupBtn.textContent = 'Log Out';
-        signupBtn.onclick = () => {
-            auth.signOut().then(() => {
-                // Reset UI after logout
-                updateUIForGuest();
-                showPage('home');
-            });
-        };
-        
-        // Show user info in login face if available
-        if (user.photoURL) {
-            userPhoto.src = user.photoURL;
-            userName.textContent = user.displayName || 'User';
-            loginFace.style.display = 'flex';
+        function signInWithFacebook() {
+            auth.signInWithPopup(facebookProvider)
+                .then((result) => {
+                    // Check if user is new
+                    const user = result.user;
+                    const isNewUser = result.additionalUserInfo.isNewUser;
+                    
+                    if (isNewUser) {
+                        // Create user profile for new Facebook user
+                        return db.collection('users').doc(user.uid).set({
+                            uid: user.uid,
+                            displayName: user.displayName,
+                            email: user.email,
+                            photoURL: user.photoURL,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            kindnessPoints: 0,
+                            connections: 0,
+                            activeDays: 1,
+                            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                            isOnline: true
+                        });
+                    }
+                })
+                .then(() => {
+                    showAuthSuccess('Signed in with Facebook successfully!');
+                    setTimeout(closeAuthModal, 1000);
+                })
+                .catch((error) => {
+                    showAuthError(error.message);
+                });
         }
-    }
 
-    function updateUIForGuest() {
-        loginBtn.textContent = 'Log In';
-        signupBtn.textContent = 'Sign Up';
-        signupBtn.onclick = () => openAuthModal(false);
-        chatContainer.style.display = 'none';
-        loginFace.style.display = 'none';
-        
-        // Reset active nav links
-        navLinks.forEach(l => l.classList.remove('active'));
-        document.querySelector('.nav-link[data-page="home"]').classList.add('active');
-    }
-
-    // Load user profile from Firestore
-    function loadUserProfile(uid) {
-        db.collection('users').doc(uid).get()
-            .then((doc) => {
-                if (doc.exists) {
-                    userProfile = doc.data();
-                    updateProfileUI(userProfile);
-                }
-            })
-            .catch((error) => {
-                console.error("Error loading user profile:", error);
-            });
-    }
-
-    // Update profile UI with user data
-    function updateProfileUI(profile) {
-        profileName.textContent = profile.displayName || 'User';
-        profileBio.textContent = `${profile.gender || ''} • ${profile.country || ''}`;
-        connectionsCount.textContent = profile.connections || 0;
-        pointsCount.textContent = profile.kindnessPoints || 0;
-        activeDays.textContent = profile.activeDays || 1;
-        
-        // Set avatar initial or photo
-        if (profile.photoURL) {
-            profileAvatar.innerHTML = `<img src="${profile.photoURL}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-        } else {
-            const initial = profile.displayName ? profile.displayName.charAt(0).toUpperCase() : 'U';
-            profileAvatar.innerHTML = initial;
+        function showAuthError(message) {
+            authError.textContent = message;
+            authError.style.display = 'block';
+            authSuccess.style.display = 'none';
         }
-    }
 
+        function showAuthSuccess(message) {
+            authSuccess.textContent = message;
+            authSuccess.style.display = 'block';
+            authError.style.display = 'none';
+        }
 
+        // ===== UI UPDATES =====
+        function updateUIForUser(user) {
+            loginBtn.textContent = 'Profile';
+            signupBtn.textContent = 'Log Out';
+            signupBtn.onclick = () => {
+                auth.signOut().then(() => {
+                    // Reset UI after logout
+                    updateUIForGuest();
+                    showPage('home');
+                });
+            };
+            
+            // Show user info in login face if available
+            if (user.photoURL) {
+                userPhoto.src = user.photoURL;
+                userName.textContent = user.displayName || 'User';
+                loginFace.style.display = 'flex';
+            }
+        }
 
-    
-// Enhanced matching function with 24-hour expiration
-function findMatch() {
-    if (!currentUser) {
-        openAuthModal(true);
-        return;
-    }
-    
-    if (!selectedMood) {
-        alert('Please select a mood first!');
-        return;
-    }
-    
-    // Show loading state
-    const originalText = connectFindMatchBtn.textContent;
-    connectFindMatchBtn.textContent = 'Finding your MoodMate...';
-    connectFindMatchBtn.disabled = true;
-    
-    // Set mood expiry to 24 hours from now
-    const now = new Date();
-    const expiryTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    
-    // Update user's mood with 24-hour expiry
-    db.collection('users').doc(currentUser.uid).update({
-        currentMood: selectedMood.name,
-        moodSetAt: firebase.firestore.FieldValue.serverTimestamp(),
-        moodExpiresAt: expiryTime,
-        isOnline: true,
-        lastActive: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        console.log('Mood set for 24 hours');
-        
-        // SIMPLE MATCHING: Get all online users and filter
-        db.collection('users')
-            .where('isOnline', '==', true)
-            .get()
-            .then((snapshot) => {
+        function updateUIForGuest() {
+            loginBtn.textContent = 'Log In';
+            signupBtn.textContent = 'Sign Up';
+            signupBtn.onclick = () => openAuthModal(false);
+            chatContainer.style.display = 'none';
+            loginFace.style.display = 'none';
+            
+            // Reset active nav links
+            navLinks.forEach(l => l.classList.remove('active'));
+            document.querySelector('.nav-link[data-page="home"]').classList.add('active');
+        }
+
+        // ===== MATCHING SYSTEM =====
+        function findMatch() {
+            if (!currentUser) {
+                openAuthModal(true);
+                return;
+            }
+            
+            if (!selectedMood) {
+                alert('Please select a mood first!');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = connectFindMatchBtn.textContent;
+            connectFindMatchBtn.textContent = 'Finding your MoodMate...';
+            connectFindMatchBtn.disabled = true;
+            
+            // Set mood expiry to 24 hours from now
+            const now = new Date();
+            const expiryTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            
+            // Update user's mood with 24-hour expiry
+            db.collection('users').doc(currentUser.uid).update({
+                currentMood: selectedMood.name,
+                moodSetAt: firebase.firestore.FieldValue.serverTimestamp(),
+                moodExpiresAt: expiryTime,
+                isOnline: true,
+                lastActive: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                console.log('Mood set for 24 hours');
+                
+                // SIMPLE MATCHING: Get all online users and filter
+                db.collection('users')
+                    .where('isOnline', '==', true)
+                    .get()
+                    .then((snapshot) => {
+                        connectFindMatchBtn.textContent = originalText;
+                        connectFindMatchBtn.disabled = false;
+                        
+                        const potentialMatches = [];
+                        const now = new Date();
+                        
+                        snapshot.forEach(doc => {
+                            const userData = doc.data();
+                            
+                            // Skip current user
+                            if (userData.uid === currentUser.uid) return;
+                            
+                            // Check if user has same mood AND mood hasn't expired
+                            if (userData.currentMood === selectedMood.name) {
+                                // Check if mood is still valid (within 24 hours)
+                                if (userData.moodExpiresAt) {
+                                    const expiryDate = userData.moodExpiresAt.toDate();
+                                    if (expiryDate > now) {
+                                        potentialMatches.push({
+                                            id: doc.id,
+                                            ...userData
+                                        });
+                                    }
+                                } else {
+                                    // If no expiry time, assume it's valid
+                                    potentialMatches.push({
+                                        id: doc.id,
+                                        ...userData
+                                    });
+                                }
+                            }
+                        });
+                        
+                        if (potentialMatches.length > 0) {
+                            const randomIndex = Math.floor(Math.random() * potentialMatches.length);
+                            currentChatPartner = potentialMatches[randomIndex];
+                            
+                            const matchMessage = `🎉 Found ${currentChatPartner.displayName} who is also feeling ${selectedMood.name}!`;
+                            alert(matchMessage);
+                            startRealChatSession();
+                        } else {
+                            const noMatchMessage = `No one else is feeling ${selectedMood.name} right now.\n\n🌟 GOOD NEWS: Your ${selectedMood.name} mood will stay active for 24 hours!\n\nOther users can find and connect with you during this time.\nTry again in a little while!`;
+                            alert(noMatchMessage);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error finding matches:", error);
+                        connectFindMatchBtn.textContent = originalText;
+                        connectFindMatchBtn.disabled = false;
+                        alert('No users available right now. Please try again later.');
+                    });
+            }).catch((error) => {
+                console.error("Error setting mood:", error);
                 connectFindMatchBtn.textContent = originalText;
                 connectFindMatchBtn.disabled = false;
+                alert('Error setting your mood. Please try again.');
+            });
+        }
+
+        // ===== CHAT SYSTEM =====
+        function startRealChatSession() {
+            if (!currentChatPartner) {
+                alert('No chat partner selected');
+                return;
+            }
+            
+            // Create a unique chat ID based on both user IDs
+            const chatId = [currentUser.uid, currentChatPartner.id].sort().join('_');
+            
+            console.log('Starting REAL chat session:', chatId);
+            
+            // Create chat session in Firestore
+            db.collection('chats').doc(chatId).set({
+                participants: [currentUser.uid, currentChatPartner.id],
+                participantNames: [currentUser.displayName || 'You', currentChatPartner.displayName || 'Anonymous'],
+                participantMoods: [selectedMood.name, currentChatPartner.currentMood],
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                mood: selectedMood.name,
+                isActive: true,
+                lastActivity: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).then(() => {
+                currentChatId = chatId;
+                setupRealChatListener(chatId);
+                showRealChatInterface();
                 
-                const potentialMatches = [];
-                const now = new Date();
+                // Send automatic welcome message
+                setTimeout(() => {
+                    sendAutoWelcomeMessage();
+                }, 1000);
                 
+            }).catch((error) => {
+                console.error("Error creating real chat session:", error);
+                alert('Error starting chat. Please try again.');
+            });
+        }
+
+        function setupRealChatListener(chatId) {
+            // Clear any existing listener
+            if (window.chatListener) {
+                window.chatListener();
+            }
+            
+            console.log('Setting up REAL chat listener for:', chatId);
+            
+            window.chatListener = db.collection('chats').doc(chatId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot((snapshot) => {
+                    chatMessages.innerHTML = '';
+                    snapshot.forEach((doc) => {
+                        const message = doc.data();
+                        const isSelf = message.senderId === currentUser.uid;
+                        addMessageToChat(isSelf ? 'self' : 'partner', message.text);
+                    });
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, (error) => {
+                    console.error("Real chat listener error:", error);
+                });
+        }
+
+        function showRealChatInterface() {
+            // Show chat UI
+            chatContainer.style.display = 'block';
+            chatPartnerName.textContent = currentChatPartner.displayName || 'MoodMate User';
+            connectionInfo.textContent = `Both feeling: ${selectedMood.name} • Connected today`;
+            
+            // Clear previous messages
+            chatMessages.innerHTML = '';
+            
+            // Add welcome message
+            addMessageToChat('system', `🎉 Connected with ${currentChatPartner.displayName}!`);
+            addMessageToChat('system', `You're both feeling ${selectedMood.name.toLowerCase()} today. Start chatting!`);
+            
+            // Scroll to chat
+            chatContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            console.log('REAL chat interface shown');
+        }
+
+        function sendAutoWelcomeMessage() {
+            const welcomeMessages = {
+                'Happy': `Hey! I'm feeling happy too! What's making your day great? 😊`,
+                'Sad': `I understand how you feel. Want to talk about what's going on? 💜`,
+                'Calm': `Nice to meet another calm soul. How's your day going? ☮️`,
+                'Excited': `Wow, I'm excited too! What's got you feeling this way? 🎉`,
+                'Thoughtful': `Interesting, I've been in a thoughtful mood as well. What's on your mind? 🤔`,
+                'Anxious': `I get anxious too sometimes. Want to share what's bothering you? 🫂`,
+                'Tired': `I'm feeling tired as well. Long day? Let's chat and relax 😴`,
+                'Angry': `I understand the frustration. Want to talk it out? 🔥`
+            };
+            
+            const autoMessage = welcomeMessages[selectedMood.name] || `Hi! I see we're both feeling ${selectedMood.name.toLowerCase()} today. How are you doing?`;
+            
+            // Add partner's auto message to chat
+            addMessageToChat('partner', autoMessage);
+        }
+
+        function addMessageToChat(sender, message) {
+            const messageElement = document.createElement('div');
+            
+            if (sender === 'system') {
+                messageElement.className = 'message system';
+                messageElement.innerHTML = `
+                    <div class="message-avatar">MM</div>
+                    <div class="message-content" style="background: #e0e0e0; color: #555;">${message}</div>
+                `;
+            } else if (sender === 'self') {
+                messageElement.className = 'message self';
+                messageElement.innerHTML = `
+                    <div class="message-avatar">${currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'Y'}</div>
+                    <div class="message-content">${message}</div>
+                `;
+            } else {
+                messageElement.className = 'message';
+                messageElement.innerHTML = `
+                    <div class="message-avatar">${currentChatPartner.displayName ? currentChatPartner.displayName.charAt(0).toUpperCase() : 'P'}</div>
+                    <div class="message-content">${message}</div>
+                `;
+            }
+            
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message === '' || !currentChatId) return;
+            
+            // Add user message to UI immediately
+            addMessageToChat('self', message);
+            messageInput.value = '';
+            
+            // Save message to Firestore for REAL chat
+            db.collection('chats').doc(currentChatId).collection('messages').add({
+                text: message,
+                senderId: currentUser.uid,
+                senderName: currentUser.displayName || 'Anonymous',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                // Update last activity
+                db.collection('chats').doc(currentChatId).update({
+                    lastActivity: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }).catch((error) => {
+                console.error("Error sending real message:", error);
+                alert('Error sending message. Please try again.');
+            });
+        }
+
+        function endChat() {
+            if (confirm('Are you sure you want to end this chat?')) {
+                if (currentChatId) {
+                    // Update chat as inactive in Firestore
+                    db.collection('chats').doc(currentChatId).update({
+                        isActive: false,
+                        endedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Remove chat listener
+                    if (window.chatListener) {
+                        window.chatListener();
+                        window.chatListener = null;
+                    }
+                }
+                
+                chatContainer.style.display = 'none';
+                currentChatId = null;
+                currentChatPartner = null;
+                
+                // Update user stats for REAL connection
+                if (userProfile) {
+                    userProfile.connections = (userProfile.connections || 0) + 1;
+                    userProfile.kindnessPoints = (userProfile.kindnessPoints || 0) + 5;
+                    updateProfileUI(userProfile);
+                    
+                    // Update in Firestore
+                    db.collection('users').doc(currentUser.uid).update({
+                        connections: firebase.firestore.FieldValue.increment(1),
+                        kindnessPoints: firebase.firestore.FieldValue.increment(5)
+                    }).catch(error => {
+                        console.error("Error updating user stats:", error);
+                    });
+                }
+                
+                alert("Thanks for connecting with a real person who understands how you feel! 💜");
+            }
+        }
+
+        // ===== PROFILE FUNCTIONS =====
+        function openEditProfileModal() {
+            alert('Edit profile functionality would open here in a full implementation');
+        }
+
+        // ===== ENHANCED FEATURES =====
+        function cleanupExpiredMoods() {
+            const now = new Date();
+            
+            db.collection('users').get().then((snapshot) => {
                 snapshot.forEach(doc => {
                     const userData = doc.data();
-                    
-                    // Skip current user
-                    if (userData.uid === currentUser.uid) return;
-                    
-                    // Check if user has same mood AND mood hasn't expired
-                    if (userData.currentMood === selectedMood.name) {
-                        // Check if mood is still valid (within 24 hours)
-                        if (userData.moodExpiresAt) {
-                            const expiryDate = userData.moodExpiresAt.toDate();
-                            if (expiryDate > now) {
-                                potentialMatches.push({
-                                    id: doc.id,
-                                    ...userData
-                                });
-                            }
-                        } else {
-                            // If no expiry time, assume it's valid
-                            potentialMatches.push({
-                                id: doc.id,
-                                ...userData
+                    if (userData.moodExpiresAt) {
+                        const expiryDate = userData.moodExpiresAt.toDate();
+                        if (expiryDate <= now) {
+                            // Mood expired, clear it
+                            db.collection('users').doc(doc.id).update({
+                                currentMood: null,
+                                moodExpiresAt: null
                             });
                         }
                     }
                 });
-                
-                if (potentialMatches.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * potentialMatches.length);
-                    currentChatPartner = potentialMatches[randomIndex];
-                    
-                    const matchMessage = `🎉 Found ${currentChatPartner.displayName} who is also feeling ${selectedMood.name}!`;
-                    alert(matchMessage);
-                    startRealChatSession();
-                } else {
-                    const noMatchMessage = `No one else is feeling ${selectedMood.name} right now.\n\n🌟 GOOD NEWS: Your ${selectedMood.name} mood will stay active for 24 hours!\n\nOther users can find and connect with you during this time.\nTry again in a little while!`;
-                    alert(noMatchMessage);
-                }
-            })
-            .catch((error) => {
-                console.error("Error finding matches:", error);
-                connectFindMatchBtn.textContent = originalText;
-                connectFindMatchBtn.disabled = false;
-                alert('No users available right now. Please try again later.');
             });
-    }).catch((error) => {
-        console.error("Error setting mood:", error);
-        connectFindMatchBtn.textContent = originalText;
-        connectFindMatchBtn.disabled = false;
-        alert('Error setting your mood. Please try again.');
-    });
-}
-    
-    
-
-
-
-    
-    // REAL CHAT SESSION
-    function startRealChatSession() {
-        if (!currentChatPartner) {
-            alert('No chat partner selected');
-            return;
         }
-        
-        // Create a unique chat ID based on both user IDs
-        const chatId = [currentUser.uid, currentChatPartner.id].sort().join('_');
-        
-        console.log('Starting REAL chat session:', chatId);
-        
-        // Create chat session in Firestore
-        db.collection('chats').doc(chatId).set({
-            participants: [currentUser.uid, currentChatPartner.id],
-            participantNames: [currentUser.displayName || 'You', currentChatPartner.displayName || 'Anonymous'],
-            participantMoods: [selectedMood.name, currentChatPartner.currentMood],
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            mood: selectedMood.name,
-            isActive: true,
-            lastActivity: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true }).then(() => {
-            currentChatId = chatId;
-            setupRealChatListener(chatId);
-            showRealChatInterface();
+
+        // ===== MOOD STATUS DISPLAY =====
+        function showMoodStatus() {
+            if (!currentUser) return;
             
-            // Send automatic welcome message
-            setTimeout(() => {
-                sendAutoWelcomeMessage();
-            }, 1000);
-            
-        }).catch((error) => {
-            console.error("Error creating real chat session:", error);
-            alert('Error starting chat. Please try again.');
-        });
-    }
-
-    // REAL CHAT LISTENER - Listens for actual messages
-    function setupRealChatListener(chatId) {
-        // Clear any existing listener
-        if (window.chatListener) {
-            window.chatListener();
-        }
-        
-        console.log('Setting up REAL chat listener for:', chatId);
-        
-        window.chatListener = db.collection('chats').doc(chatId).collection('messages')
-            .orderBy('timestamp', 'asc')
-            .onSnapshot((snapshot) => {
-                chatMessages.innerHTML = '';
-                snapshot.forEach((doc) => {
-                    const message = doc.data();
-                    const isSelf = message.senderId === currentUser.uid;
-                    addMessageToChat(isSelf ? 'self' : 'partner', message.text);
-                });
-                
-                // Scroll to bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, (error) => {
-                console.error("Real chat listener error:", error);
-            });
-    }
-
-    // Show real chat interface
-    function showRealChatInterface() {
-        // Show chat UI
-        chatContainer.style.display = 'block';
-        chatPartnerName.textContent = currentChatPartner.displayName || 'MoodMate User';
-        connectionInfo.textContent = `Both feeling: ${selectedMood.name} • Connected today`;
-        
-        // Clear previous messages
-        chatMessages.innerHTML = '';
-        
-        // Add welcome message
-        addMessageToChat('system', `🎉 Connected with ${currentChatPartner.displayName}!`);
-        addMessageToChat('system', `You're both feeling ${selectedMood.name.toLowerCase()} today. Start chatting!`);
-        
-        // Scroll to chat
-        chatContainer.scrollIntoView({ behavior: 'smooth' });
-        
-        console.log('REAL chat interface shown');
-    }
-
-    // Send automatic welcome message in real chat
-    function sendAutoWelcomeMessage() {
-        const welcomeMessages = {
-            'Happy': `Hey! I'm feeling happy too! What's making your day great? 😊`,
-            'Sad': `I understand how you feel. Want to talk about what's going on? 💜`,
-            'Calm': `Nice to meet another calm soul. How's your day going? ☮️`,
-            'Excited': `Wow, I'm excited too! What's got you feeling this way? 🎉`,
-            'Thoughtful': `Interesting, I've been in a thoughtful mood as well. What's on your mind? 🤔`,
-            'Anxious': `I get anxious too sometimes. Want to share what's bothering you? 🫂`,
-            'Tired': `I'm feeling tired as well. Long day? Let's chat and relax 😴`,
-            'Angry': `I understand the frustration. Want to talk it out? 🔥`
-        };
-        
-        const autoMessage = welcomeMessages[selectedMood.name] || `Hi! I see we're both feeling ${selectedMood.name.toLowerCase()} today. How are you doing?`;
-        
-        // Add partner's auto message to chat
-        addMessageToChat('partner', autoMessage);
-    }
-
-    // Add a message to the chat
-    function addMessageToChat(sender, message) {
-        const messageElement = document.createElement('div');
-        
-        if (sender === 'system') {
-            messageElement.className = 'message system';
-            messageElement.innerHTML = `
-                <div class="message-avatar">MM</div>
-                <div class="message-content" style="background: #e0e0e0; color: #555;">${message}</div>
-            `;
-        } else if (sender === 'self') {
-            messageElement.className = 'message self';
-            messageElement.innerHTML = `
-                <div class="message-avatar">${currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'Y'}</div>
-                <div class="message-content">${message}</div>
-            `;
-        } else {
-            messageElement.className = 'message';
-            messageElement.innerHTML = `
-                <div class="message-avatar">${currentChatPartner.displayName ? currentChatPartner.displayName.charAt(0).toUpperCase() : 'P'}</div>
-                <div class="message-content">${message}</div>
-            `;
-        }
-        
-        chatMessages.appendChild(messageElement);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    // REAL send message function - sends to actual Firestore
-    function sendMessage() {
-        const message = messageInput.value.trim();
-        if (message === '' || !currentChatId) return;
-        
-        // Add user message to UI immediately
-        addMessageToChat('self', message);
-        messageInput.value = '';
-        
-        // Save message to Firestore for REAL chat
-        db.collection('chats').doc(currentChatId).collection('messages').add({
-            text: message,
-            senderId: currentUser.uid,
-            senderName: currentUser.displayName || 'Anonymous',
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            // Update last activity
-            db.collection('chats').doc(currentChatId).update({
-                lastActivity: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        }).catch((error) => {
-            console.error("Error sending real message:", error);
-            alert('Error sending message. Please try again.');
-        });
-    }
-
-    // REAL end chat function
-    function endChat() {
-        if (confirm('Are you sure you want to end this chat?')) {
-            if (currentChatId) {
-                // Update chat as inactive in Firestore
-                db.collection('chats').doc(currentChatId).update({
-                    isActive: false,
-                    endedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Remove chat listener
-                if (window.chatListener) {
-                    window.chatListener();
-                    window.chatListener = null;
-                }
-            }
-            
-            chatContainer.style.display = 'none';
-            currentChatId = null;
-            currentChatPartner = null;
-            
-            // Update user stats for REAL connection
-            if (userProfile) {
-                userProfile.connections = (userProfile.connections || 0) + 1;
-                userProfile.kindnessPoints = (userProfile.kindnessPoints || 0) + 5;
-                updateProfileUI(userProfile);
-                
-                // Update in Firestore
-                db.collection('users').doc(currentUser.uid).update({
-                    connections: firebase.firestore.FieldValue.increment(1),
-                    kindnessPoints: firebase.firestore.FieldValue.increment(5)
-                }).catch(error => {
-                    console.error("Error updating user stats:", error);
-                });
-            }
-            
-            alert("Thanks for connecting with a real person who understands how you feel! 💜");
-        }
-    }
-
-    // Open edit profile modal (simplified for demo)
-    function openEditProfileModal() {
-        alert('Edit profile functionality would open here in a full implementation');
-    }
-
-    // Cleanup expired moods
-    function cleanupExpiredMoods() {
-        const now = new Date();
-        
-        db.collection('users').get().then((snapshot) => {
-            snapshot.forEach(doc => {
-                const userData = doc.data();
-                if (userData.moodExpiresAt) {
-                    const expiryDate = userData.moodExpiresAt.toDate();
-                    if (expiryDate <= now) {
-                        // Mood expired, clear it
-                        db.collection('users').doc(doc.id).update({
-                            currentMood: null,
-                            moodExpiresAt: null
-                        });
-                    }
-                }
-            });
-        });
-    }
-
-    // Initialize the app when the page loads
-    window.addEventListener('DOMContentLoaded', function() {
-        initApp();
-        
-        // Run cleanup every hour
-        setInterval(cleanupExpiredMoods, 60 * 60 * 1000);
-        
-        // Run cleanup on page load
-        cleanupExpiredMoods();
-        
-        console.log('MoodMate App Fully Initialized with 24-Hour Mood System!');
-    });
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-// ==================== MOOD STATUS DISPLAY ====================
-function showMoodStatus() {
-    if (!currentUser) return;
-    
-    db.collection('users').doc(currentUser.uid).get()
-        .then((doc) => {
-            if (doc.exists) {
-                const userData = doc.data();
-                const now = new Date();
-                
-                if (userData.currentMood && userData.moodExpiresAt) {
-                    const expiryDate = userData.moodExpiresAt.toDate();
-                    const timeLeft = expiryDate - now;
-                    
-                    if (timeLeft > 0) {
-                        const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
-                        const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            db.collection('users').doc(currentUser.uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        const now = new Date();
                         
-                        // Create or update mood status element
-                        let statusElement = document.getElementById('moodStatus');
-                        if (!statusElement) {
-                            statusElement = document.createElement('div');
-                            statusElement.id = 'moodStatus';
-                            const connectSection = document.querySelector('#connect .mood-selection');
-                            connectSection.insertBefore(statusElement, connectSection.firstChild);
-                        }
-                        
-                        statusElement.innerHTML = `
-                            <div style="background: var(--gradient); color: white; padding: 15px; border-radius: 15px; text-align: center; margin: 20px 0;">
-                                <strong>🎯 Your Current Mood: ${userData.currentMood}</strong>
-                                <br>
-                                <small>⏰ Active for ${hoursLeft}h ${minutesLeft}m more</small>
-                            </div>
-                        `;
-                    }
-                }
-            }
-        })
-        .catch(error => console.error("Error checking mood status:", error));
-}
-
-// Add to showPage function
-const originalShowPage = showPage;
-showPage = function(page) {
-    originalShowPage(page);
-    if (page === 'connect' && currentUser) {
-        setTimeout(showMoodStatus, 500);
-    }
-};
-
-// Update mood status every minute
-setInterval(showMoodStatus, 60000);
-    
-    
-    
-// ==================== ONLINE USERS COUNTER ====================
-function showOnlineUsers() {
-    if (!currentUser) return;
-    
-    db.collection('users')
-        .where('isOnline', '==', true)
-        .get()
-        .then((snapshot) => {
-            const moodCounts = {};
-            const now = new Date();
-            let totalOnline = 0;
-            
-            snapshot.forEach(doc => {
-                const userData = doc.data();
-                if (userData.uid !== currentUser.uid) {
-                    totalOnline++;
-                    if (userData.currentMood) {
-                        // Check if mood hasn't expired
-                        if (!userData.moodExpiresAt || userData.moodExpiresAt.toDate() > now) {
-                            moodCounts[userData.currentMood] = (moodCounts[userData.currentMood] || 0) + 1;
+                        if (userData.currentMood && userData.moodExpiresAt) {
+                            const expiryDate = userData.moodExpiresAt.toDate();
+                            const timeLeft = expiryDate - now;
+                            
+                            if (timeLeft > 0) {
+                                const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+                                const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                                
+                                // Create or update mood status element
+                                let statusElement = document.getElementById('moodStatus');
+                                if (!statusElement) {
+                                    statusElement = document.createElement('div');
+                                    statusElement.id = 'moodStatus';
+                                    const connectSection = document.querySelector('#connect .mood-selection');
+                                    connectSection.insertBefore(statusElement, connectSection.firstChild);
+                                }
+                                
+                                statusElement.innerHTML = `
+                                    <div style="background: var(--gradient); color: white; padding: 15px; border-radius: 15px; text-align: center; margin: 20px 0;">
+                                        <strong>🎯 Your Current Mood: ${userData.currentMood}</strong>
+                                        <br>
+                                        <small>⏰ Active for ${hoursLeft}h ${minutesLeft}m more</small>
+                                    </div>
+                                `;
+                            }
                         }
                     }
-                }
-            });
+                })
+                .catch(error => console.error("Error checking mood status:", error));
+        }
+
+        // ===== ONLINE USERS COUNTER =====
+        function showOnlineUsers() {
+            if (!currentUser) return;
             
-            updateMoodCardsWithCounts(moodCounts, totalOnline);
-        })
-        .catch(error => console.error("Error getting online users:", error));
-}
-
-function updateMoodCardsWithCounts(moodCounts, totalOnline) {
-    const moodCards = document.querySelectorAll('.mood-card');
-    
-    // Update total online counter
-    let totalCounter = document.getElementById('totalOnlineCounter');
-    if (!totalCounter) {
-        totalCounter = document.createElement('div');
-        totalCounter.id = 'totalOnlineCounter';
-        totalCounter.style.cssText = 'text-align: center; margin: 10px 0; font-weight: 600; color: var(--primary);';
-        const connectSection = document.querySelector('#connect .mood-selection');
-        connectSection.insertBefore(totalCounter, connectSection.querySelector('.mood-grid'));
-    }
-    totalCounter.innerHTML = `👥 ${totalOnline} users online right now`;
-    
-    // Update individual mood counts
-    moodCards.forEach(card => {
-        const moodName = card.querySelector('.mood-name').textContent;
-        const count = moodCounts[moodName] || 0;
-        
-        // Remove existing count badge
-        const existingBadge = card.querySelector('.user-count-badge');
-        if (existingBadge) existingBadge.remove();
-        
-        if (count > 0) {
-            // Add count badge
-            const badge = document.createElement('div');
-            badge.className = 'user-count-badge';
-            badge.innerHTML = `${count} online`;
-            badge.style.cssText = `
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                background: var(--success);
-                color: white;
-                padding: 2px 8px;
-                border-radius: 10px;
-                font-size: 0.7rem;
-                font-weight: bold;
-            `;
-            card.style.position = 'relative';
-            card.appendChild(badge);
-        }
-    });
-}
-
-// Update when connect page opens
-document.addEventListener('DOMContentLoaded', function() {
-    const originalShowPage = showPage;
-    showPage = function(page) {
-        originalShowPage(page);
-        if (page === 'connect' && currentUser) {
-            setTimeout(showOnlineUsers, 1000);
-            // Update every 30 seconds
-            setInterval(showOnlineUsers, 30000);
-        }
-    };
-});
-
-
-
-
-
-
-
-
-// ==================== ENHANCED MATCH NOTIFICATIONS ====================
-function showEnhancedNotification(message, type = 'info', duration = 5000) {
-    // Remove existing notification
-    const existingNotification = document.getElementById('moodmateNotification');
-    if (existingNotification) existingNotification.remove();
-    
-    // Create notification
-    const notification = document.createElement('div');
-    notification.id = 'moodmateNotification';
-    notification.innerHTML = `
-        <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--primary)'};
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 10000;
-            max-width: 300px;
-            animation: slideIn 0.3s ease;
-        ">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
-                <div>${message}</div>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto remove after duration
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }
-    }, duration);
-}
-
-// Add CSS for animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
-
-// Enhanced match results
-function showMatchResult(potentialMatches) {
-    if (potentialMatches.length > 0) {
-        const randomIndex = Math.floor(Math.random() * potentialMatches.length);
-        currentChatPartner = potentialMatches[randomIndex];
-        
-        showEnhancedNotification(
-            `🎉 Found ${currentChatPartner.displayName} who's also feeling ${selectedMood.name}!`,
-            'success',
-            4000
-        );
-        
-        setTimeout(() => startRealChatSession(), 1000);
-    } else {
-        showEnhancedNotification(
-            `No one else is feeling ${selectedMood.name} right now. Don't worry! Your mood will stay active for 24 hours. Try again later! 🌟`,
-            'info',
-            6000
-        );
-    }
-}
-
-
-
-
-
-
-
-
-
-// ==================== QUICK MOOD SELECTOR ====================
-function addQuickMoodSelector() {
-    if (!currentUser) return;
-    
-    // Check if user has recent moods
-    db.collection('users').doc(currentUser.uid).get()
-        .then((doc) => {
-            if (doc.exists) {
-                const userData = doc.data();
-                const recentMoods = userData.recentMoods || [];
-                
-                if (recentMoods.length > 0) {
-                    const quickSelector = document.createElement('div');
-                    quickSelector.id = 'quickMoodSelector';
-                    quickSelector.innerHTML = `
-                        <div style="text-align: center; margin: 20px 0;">
-                            <h3 style="color: var(--primary); margin-bottom: 15px;">Quick Select Recent Moods</h3>
-                            <div id="quickMoodButtons" style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;"></div>
-                        </div>
-                    `;
+            db.collection('users')
+                .where('isOnline', '==', true)
+                .get()
+                .then((snapshot) => {
+                    const moodCounts = {};
+                    const now = new Date();
+                    let totalOnline = 0;
                     
-                    const connectSection = document.querySelector('#connect .mood-selection');
-                    const moodGrid = connectSection.querySelector('.mood-grid');
-                    connectSection.insertBefore(quickSelector, moodGrid);
-                    
-                    // Add quick mood buttons
-                    const quickMoodButtons = document.getElementById('quickMoodButtons');
-                    recentMoods.slice(0, 4).forEach(moodName => {
-                        const mood = moods.find(m => m.name === moodName);
-                        if (mood) {
-                            const button = document.createElement('button');
-                            button.className = 'btn btn-outline';
-                            button.innerHTML = `${mood.emoji} ${mood.name}`;
-                            button.style.cssText = 'padding: 8px 15px; font-size: 0.9rem;';
-                            button.onclick = () => {
-                                // Find and click the corresponding mood card
-                                const moodCards = document.querySelectorAll('.mood-card');
-                                moodCards.forEach(card => {
-                                    if (card.querySelector('.mood-name').textContent === mood.name) {
-                                        card.click();
-                                        showEnhancedNotification(`Selected ${mood.name} mood!`, 'success', 2000);
-                                    }
-                                });
-                            };
-                            quickMoodButtons.appendChild(button);
+                    snapshot.forEach(doc => {
+                        const userData = doc.data();
+                        if (userData.uid !== currentUser.uid) {
+                            totalOnline++;
+                            if (userData.currentMood) {
+                                // Check if mood hasn't expired
+                                if (!userData.moodExpiresAt || userData.moodExpiresAt.toDate() > now) {
+                                    moodCounts[userData.currentMood] = (moodCounts[userData.currentMood] || 0) + 1;
+                                }
+                            }
                         }
                     });
+                    
+                    updateMoodCardsWithCounts(moodCounts, totalOnline);
+                })
+                .catch(error => console.error("Error getting online users:", error));
+        }
+
+        function updateMoodCardsWithCounts(moodCounts, totalOnline) {
+            const moodCards = document.querySelectorAll('.mood-card');
+            
+            // Update total online counter
+            let totalCounter = document.getElementById('totalOnlineCounter');
+            if (!totalCounter) {
+                totalCounter = document.createElement('div');
+                totalCounter.id = 'totalOnlineCounter';
+                totalCounter.style.cssText = 'text-align: center; margin: 10px 0; font-weight: 600; color: var(--primary);';
+                const connectSection = document.querySelector('#connect .mood-selection');
+                connectSection.insertBefore(totalCounter, connectSection.querySelector('.mood-grid'));
+            }
+            totalCounter.innerHTML = `👥 ${totalOnline} users online right now`;
+            
+            // Update individual mood counts
+            moodCards.forEach(card => {
+                const moodName = card.querySelector('.mood-name').textContent;
+                const count = moodCounts[moodName] || 0;
+                
+                // Remove existing count badge
+                const existingBadge = card.querySelector('.user-count-badge');
+                if (existingBadge) existingBadge.remove();
+                
+                if (count > 0) {
+                    // Add count badge
+                    const badge = document.createElement('div');
+                    badge.className = 'user-count-badge';
+                    badge.innerHTML = `${count} online`;
+                    badge.style.cssText = `
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        background: var(--success);
+                        color: white;
+                        padding: 2px 8px;
+                        border-radius: 10px;
+                        font-size: 0.7rem;
+                        font-weight: bold;
+                    `;
+                    card.style.position = 'relative';
+                    card.appendChild(badge);
                 }
-            }
-        })
-        .catch(error => console.error("Error loading recent moods:", error));
-}
+            });
+        }
 
-// Update when user selects a mood to save as recent
-function saveToRecentMoods(moodName) {
-    if (!currentUser) return;
-    
-    db.collection('users').doc(currentUser.uid).get()
-        .then((doc) => {
-            if (doc.exists) {
-                const userData = doc.data();
-                let recentMoods = userData.recentMoods || [];
-                
-                // Remove if already exists
-                recentMoods = recentMoods.filter(m => m !== moodName);
-                // Add to beginning
-                recentMoods.unshift(moodName);
-                // Keep only last 5
-                recentMoods = recentMoods.slice(0, 5);
-                
-                // Update in Firestore
-                db.collection('users').doc(currentUser.uid).update({
-                    recentMoods: recentMoods
-                });
-            }
-        })
-        .catch(error => console.error("Error saving recent mood:", error));
-}
+        // ===== ENHANCED NOTIFICATIONS =====
+        function showEnhancedNotification(message, type = 'info', duration = 5000) {
+            // Remove existing notification
+            const existingNotification = document.getElementById('moodmateNotification');
+            if (existingNotification) existingNotification.remove();
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.id = 'moodmateNotification';
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--primary)'};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    z-index: 10000;
+                    max-width: 300px;
+                    animation: slideIn 0.3s ease;
+                ">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                        <div>${message}</div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after duration
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, duration);
+        }
 
-// Add to your selectMood function
-const originalSelectMood = selectMood;
-selectMood = function(mood, card) {
-    originalSelectMood(mood, card);
-    saveToRecentMoods(mood.name);
-};
+        // ===== QUICK MOOD SELECTOR =====
+        function addQuickMoodSelector() {
+            if (!currentUser) return;
+            
+            // Check if user has recent moods
+            db.collection('users').doc(currentUser.uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        const recentMoods = userData.recentMoods || [];
+                        
+                        if (recentMoods.length > 0) {
+                            const quickSelector = document.createElement('div');
+                            quickSelector.id = 'quickMoodSelector';
+                            quickSelector.innerHTML = `
+                                <div style="text-align: center; margin: 20px 0;">
+                                    <h3 style="color: var(--primary); margin-bottom: 15px;">Quick Select Recent Moods</h3>
+                                    <div id="quickMoodButtons" style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;"></div>
+                                </div>
+                            `;
+                            
+                            const connectSection = document.querySelector('#connect .mood-selection');
+                            const moodGrid = connectSection.querySelector('.mood-grid');
+                            connectSection.insertBefore(quickSelector, moodGrid);
+                            
+                            // Add quick mood buttons
+                            const quickMoodButtons = document.getElementById('quickMoodButtons');
+                            recentMoods.slice(0, 4).forEach(moodName => {
+                                const mood = moods.find(m => m.name === moodName);
+                                if (mood) {
+                                    const button = document.createElement('button');
+                                    button.className = 'btn btn-outline';
+                                    button.innerHTML = `${mood.emoji} ${mood.name}`;
+                                    button.style.cssText = 'padding: 8px 15px; font-size: 0.9rem;';
+                                    button.onclick = () => {
+                                        // Find and click the corresponding mood card
+                                        const moodCards = document.querySelectorAll('.mood-card');
+                                        moodCards.forEach(card => {
+                                            if (card.querySelector('.mood-name').textContent === mood.name) {
+                                                card.click();
+                                                showEnhancedNotification(`Selected ${mood.name} mood!`, 'success', 2000);
+                                            }
+                                        });
+                                    };
+                                    quickMoodButtons.appendChild(button);
+                                }
+                            });
+                        }
+                    }
+                })
+                .catch(error => console.error("Error loading recent moods:", error));
+        }
 
+        function saveToRecentMoods(moodName) {
+            if (!currentUser) return;
+            
+            db.collection('users').doc(currentUser.uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        let recentMoods = userData.recentMoods || [];
+                        
+                        // Remove if already exists
+                        recentMoods = recentMoods.filter(m => m !== moodName);
+                        // Add to beginning
+                        recentMoods.unshift(moodName);
+                        // Keep only last 5
+                        recentMoods = recentMoods.slice(0, 5);
+                        
+                        // Update in Firestore
+                        db.collection('users').doc(currentUser.uid).update({
+                            recentMoods: recentMoods
+                        });
+                    }
+                })
+                .catch(error => console.error("Error saving recent mood:", error));
+        }
 
-
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</script>
+        // ===== INITIALIZE APP =====
+        window.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            
+            // Run cleanup every hour
+            setInterval(cleanupExpiredMoods, 60 * 60 * 1000);
+            
+            // Run cleanup on page load
+            cleanupExpiredMoods();
+            
+            console.log('MoodMate App Fully Initialized with 24-Hour Mood System!');
+        });
+    </script>
 </body>
 </html>
-
